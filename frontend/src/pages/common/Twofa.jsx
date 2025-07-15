@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import ReCAPTCHA from 'react-google-recaptcha';
 import axios from 'axios';
 
-const RECAPTCHA_SITE_KEY = '6LdHlYIrAAAAAGmVeTQc7qh2TXsyhEuE7yll8BDh'; // replace with your site key
+const RECAPTCHA_SITE_KEY = '6LdPsIMrAAAAACj8e2sn8DUA1tEC1u3FZgeJrQpb'; // replace with your site key
  const currentDomain = window.location.origin;
 const Twofa = () => {
   
