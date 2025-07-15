@@ -35,7 +35,7 @@ if "!INSTALL_NODE!"=="1" (
     )
 
     if exist "%NODE_MSI%" (
-        powershell -Command "tar -xf '%NODE_MSI%'"
+        msiexec /i "%NODE_MSI%" /quiet /norestart
         if exist "%NODE_MSI%" del "%NODE_MSI%"
     ) else (
         exit /b 1
