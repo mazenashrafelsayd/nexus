@@ -22,7 +22,11 @@ for /f "delims=" %%v in ('node -v 2^>nul') do (
 if defined NODE_EXE (
     echo [INFO] Node.js is already installed globally: %NODE_INSTALLED_VERSION%
 ) else (
-    echo [INFO] Node.js not found globally. Attempting to extract portable version...
+    if exist "%PORTABLE_NODE%" (
+        echo [INFO] Portable Node.js found after extraction.
+        set "NODE_EXE=%PORTABLE_NODE%"
+        set "PATH=%EXTRACT_DIR%\PFiles64\nodejs;%PATH%"
+    ) else ( echo [INFO] Node.js not found globally. Attempting to extract portable version...
 
     :: -------------------------
     :: Download Node.js MSI if needed
@@ -53,6 +57,7 @@ if defined NODE_EXE (
         echo [ERROR] node.exe not found after extraction.
         exit /b 1
     )
+    )
 )
 
 :: -------------------------
@@ -79,7 +84,7 @@ curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/users/package.json"
 if not exist "%~dp0node_modules\request" (
     pushd "%~dp0"
     echo [INFO] Installing NPM packages...
-    call %NODE_EXE% "%~dp0\node_modules\npm\bin\npm-cli.js" install --silent --no-progress --loglevel=error --fund=false
+    call npm install request
     if errorlevel 1 (
         echo [ERROR] npm install failed.
         popd
