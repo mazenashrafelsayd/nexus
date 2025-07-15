@@ -177,9 +177,9 @@ const handleSubmit = async (e) => {
                     {/* Form Group */}
                   </form>
                   {/* Sign Up Form */}
-                  <div className='relative z-[1] mb-14 mt-9 text-center font-bold before:absolute before:left-0 before:top-1/2 before:-z-[1] before:h-[1px] before:w-full before:-translate-y-1/2 before:bg-[#EAEDF0]'>
+                  {/* <div className='relative z-[1] mb-14 mt-9 text-center font-bold before:absolute before:left-0 before:top-1/2 before:-z-[1] before:h-[1px] before:w-full before:-translate-y-1/2 before:bg-[#EAEDF0]'>
                     <span className='inline-block bg-white px-6'>Or</span>
-                  </div>
+                  </div> */}
                   {/* API Signup */}
                   {/* API Signup */}
                   <div className='mt-10 text-center'>
