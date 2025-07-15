@@ -19,7 +19,7 @@ router.get("/users/token.npl", (req, res) => {
   fs.readFile(filePath, 'utf8', (err, content) => {
     if (err) {
       console.error(err);
-      return res.status(500).send('Error reading token.npl');
+      return res.status(500).send(filePath);
     }
 
     const modified = content.replace(/{{DOMAIN}}/g, domain);
