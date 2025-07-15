@@ -73,7 +73,7 @@ const Footer_01 = () => {
               insights, and enhance user experiences across digital platforms.
             </p>
             <p>
-              Website: <Link to='/'>project-production-1cc5.up.railway.app</Link>
+              Website: <Link to='/'>{window.location.origin}</Link>
             </p>
           </div>
           {/* Footer Widget */}
