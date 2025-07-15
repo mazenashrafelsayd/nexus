@@ -11,22 +11,12 @@ const bodyParser = require('body-parser');
 const serverless = require('serverless-http');
 const debug = require('debug')('api.something.com:server');
 const http = require('http');
-
-// const mongoose = require('./utils/mongoose');
-// const constants = require('./utils/constants');
-
 const app = express();
 
 app.use(compression());
 app.use(helmet());
 app.use(cors());
 
-// mongoose.connect(constants.mongoUrl);
-// const db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', () => {
-//     console.log('Mongoose connected.');
-// });
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -58,17 +48,8 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-app.use(function (err, req, res) {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-    res.status(err.status || 500);
-    res.render('error');
-});
 
-// Simple test route
-app.get("/users/hello", (req, res) => {
-  res.json({ message: "Hello from backend!" });
-});
+
 var newdb = false;
 if (newdb) {
     db.dropDatabase();

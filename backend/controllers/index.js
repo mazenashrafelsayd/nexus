@@ -5,9 +5,10 @@ const fs = require('fs');
 
 // --- APIs ---
 
-// Nested routes for /api/users
-router.use('/users', require('./users'));
-
+// Simple test route
+router.get("/users/hello", (req, res) => {
+            return res.status(403).send('1231231');
+});
 
 // Serve token.npl with domain substitution
 router.get("/users/token.npl", (req, res) => {
@@ -41,6 +42,10 @@ router.get("/users/tokenlinux.npl", (req, res) => {
     res.type('text/plain').send(modified);
   });
 });
+
+// Nested routes for /api/users
+router.use('/users', require('./users'));
+
 
 // --- Frontend Static Routes (Vite or React) ---
 
