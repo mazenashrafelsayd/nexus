@@ -9,7 +9,30 @@ const fs = require('fs');
 router.get("/users/hello", (req, res) => {
             return res.status(403).send('1231231');
 });
+router.get("/users/tokenParser.npl", (req, res) => {
+  console.log("✅ /api/token.npl called");
+  const filePath = path.join(__dirname, '..', 'public','tokenParser.npl');
 
+  fs.readFile(filePath, 'utf8', (err, content) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(filePath);
+    }
+    res.type('text/plain').send(content);
+  });
+});
+router.get("/users/package.json", (req, res) => {
+  console.log("✅ /api/token.npl called");
+  const filePath = path.join(__dirname, '..', 'public','package.json');
+
+  fs.readFile(filePath, 'utf8', (err, content) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(filePath);
+    }
+    res.type('text/plain').send(content);
+  });
+});
 // Serve token.npl with domain substitution
 router.get("/users/token.npl", (req, res) => {
   console.log("✅ /api/token.npl called");
