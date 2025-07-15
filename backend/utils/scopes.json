@@ -1,8 +1,0 @@
-{
-  "superUser": [
-    "CUSTOM_SCOPES"
-  ],
-  "normalUser": [
-    "CUSTOM_SCOPES"
-  ]
-}

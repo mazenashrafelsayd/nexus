@@ -13,12 +13,10 @@ const debug = require('debug')('api.something.com:server');
 const http = require('http');
 
 // const mongoose = require('./utils/mongoose');
-const constants = require('./utils/constants');
-const User = require('./models/User');
+// const constants = require('./utils/constants');
 
 const app = express();
 
-console.error("123");
 app.use(compression());
 app.use(helmet());
 app.use(cors());
@@ -67,20 +65,13 @@ app.use(function (err, req, res) {
     res.render('error');
 });
 
+// Simple test route
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from backend!" });
+});
 var newdb = false;
 if (newdb) {
     db.dropDatabase();
-}
-
-var seeding = false;
-if (seeding) {
-    User.createData({
-        email: "richardplayventures@gmail.com",
-        name: "richardmartin",
-        status: "admin"
-    }, (err, data) => {
-        console.log(err || data);
-    });
 }
 
 // --- VERCEL EXPORT ---

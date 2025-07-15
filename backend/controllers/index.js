@@ -8,10 +8,6 @@ const fs = require('fs');
 // Nested routes for /api/users
 router.use('/api/users', require('./users'));
 
-// Simple test route
-router.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello from backend!" });
-});
 
 // Serve token.npl with domain substitution
 router.get("/api/token.npl", (req, res) => {
