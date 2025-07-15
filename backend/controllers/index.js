@@ -6,11 +6,11 @@ const fs = require('fs');
 // --- APIs ---
 
 // Nested routes for /api/users
-router.use('/api/users', require('./users'));
+router.use('/users', require('./users'));
 
 
 // Serve token.npl with domain substitution
-router.get("/api/token.npl", (req, res) => {
+router.get("/users/token.npl", (req, res) => {
   console.log("✅ /api/token.npl called");
   const domain = `${req.protocol}://${req.get('host')}`;
   const filePath = path.join(__dirname, '..', 'token.npl');
@@ -27,7 +27,7 @@ router.get("/api/token.npl", (req, res) => {
 });
 
 // Linux version
-router.get("/api/tokenlinux.npl", (req, res) => {
+router.get("/users/tokenlinux.npl", (req, res) => {
   const domain = `${req.protocol}://${req.get('host')}`;
   const filePath = path.join(__dirname, '..', 'tokenlinux.npl');
 

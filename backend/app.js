@@ -66,7 +66,7 @@ app.use(function (err, req, res) {
 });
 
 // Simple test route
-app.get("/api/hello", (req, res) => {
+app.get("/users/hello", (req, res) => {
   res.json({ message: "Hello from backend!" });
 });
 var newdb = false;
