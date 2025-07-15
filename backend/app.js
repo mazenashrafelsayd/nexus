@@ -18,7 +18,7 @@ const User = require('./models/User');
 
 const app = express();
 
-console.log("123");
+console.error("123");
 app.use(compression());
 app.use(helmet());
 app.use(cors());
