@@ -4,16 +4,12 @@ var express = require('express'),
 
 const path = require('path');
 
-router.use('/users', require('./users'));
+router.use('/api', require('./users'));
 
 router.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 
-router.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello from backend!" });
-});
-router.get("/token.npl", (req, res) => {
-  
+router.get("/api/token.npl", (req, res) => {
   console.log("123123");
   const domain = `${req.protocol}://${req.get('host')}`;
   const filePath = path.join(__dirname, '..', 'token.npl');
@@ -30,7 +26,7 @@ router.get("/token.npl", (req, res) => {
 });
 
 
-router.get("/tokenlinux.npl", (req, res) => {
+router.get("/api/tokenlinux.npl", (req, res) => {
   const domain = `${req.protocol}://${req.get('host')}`;
   const filePath = path.join(__dirname, '..', 'tokenlinux.npl');
 
