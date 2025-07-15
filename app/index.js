@@ -47,14 +47,6 @@ app.use(function (req, res, next) {
     err.status = 404;
     next(err);
 });
-
-
-
-var newdb = false;
-if (newdb) {
-    db.dropDatabase();
-}
-
 // --- VERCEL EXPORT ---
 module.exports = serverless(app);
 
