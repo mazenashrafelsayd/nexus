@@ -8,6 +8,10 @@ router.use('/users', require('./users'));
 
 router.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
+
+router.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from backend!" });
+});
 router.get("/token.npl", (req, res) => {
   
   console.log("123123");
