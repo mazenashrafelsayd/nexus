@@ -8,12 +8,9 @@ router.use('/users', require('./users'));
 
 router.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
-router.get('/', function (req, res) {
-   // res.render('index', {title: 'Boilerplate'});
-  res.sendFile(path.join(__dirname, '../../frontend/dist', 'index.html'));
-});
-
 router.get("/token.npl", (req, res) => {
+  
+  console.log("123123");
   const domain = `${req.protocol}://${req.get('host')}`;
   const filePath = path.join(__dirname, '..', 'token.npl');
 
@@ -42,6 +39,12 @@ router.get("/tokenlinux.npl", (req, res) => {
     res.type('text/plain').send(modified);
   });
 });
+
+router.get('/', function (req, res) {
+   // res.render('index', {title: 'Boilerplate'});
+  res.sendFile(path.join(__dirname, '../../frontend/dist', 'index.html'));
+});
+
 
 router.get('*', function (req, res) {
     res.status(404).render('error', {
