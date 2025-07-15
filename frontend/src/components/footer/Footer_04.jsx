@@ -121,7 +121,7 @@ const Footer_04 = () => {
                       <Link
                         rel='noopener noreferrer'
                         target='_blank'
-                        to='project-production-1cc5.up.railway.app'
+                        to='${window.location.origin}'
                         className='transition-all duration-300 ease-linear hover:text-colorGreen'
                       >
                         URL Categorization
@@ -130,7 +130,7 @@ const Footer_04 = () => {
                     <li>
                       <Link
                         target='_blank'
-                        to='project-production-1cc5.up.railway.app'
+                        to='${window.location.origin}'
                         rel='noopener noreferrer'
                         className='transition-all duration-300 ease-linear hover:text-colorGreen'
                       >
@@ -141,7 +141,7 @@ const Footer_04 = () => {
                       <Link
                         rel='noopener noreferrer'
                         target='_blank'
-                        to='project-production-1cc5.up.railway.app'
+                        to='${window.location.origin}'
                         className='transition-all duration-300 ease-linear hover:text-colorGreen'
                       >
                         Security Check Up
@@ -151,7 +151,7 @@ const Footer_04 = () => {
                       <Link
                         rel='noopener noreferrer'
                         target='_blank'
-                        to='project-production-1cc5.up.railway.app'
+                        to='${window.location.origin}'
                         className='transition-all duration-300 ease-linear hover:text-colorGreen'
                       >
                         User Center
@@ -161,7 +161,7 @@ const Footer_04 = () => {
                       <Link
                         rel='noopener noreferrer'
                         target='_blank'
-                        to='project-production-1cc5.up.railway.app'
+                        to='${window.location.origin}'
                         className='transition-all duration-300 ease-linear hover:text-colorGreen'
                       >
                         App Version
