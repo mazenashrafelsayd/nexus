@@ -133,34 +133,6 @@ const Login = () => {
                     <span className='inline-block bg-white px-6'>Or</span>
                   </div>
                   {/* API login */}
-                  <div className='flex flex-col gap-y-6'>
-                    {/* Google API login Button */}
-                    <a className='button flex w-full justify-center gap-x-4 rounded-[50px] border-2 border-[#EAEDF0] bg-white py-4 hover:bg-slate-200 cursor-pointer'>
-                      <span className='hidden h-6 w-6 sm:inline-block'>
-                        <img
-                          src='assets/img/th-1/flat-color-icons-google.svg'
-                          alt='flat-color-icons-google'
-                          width={24}
-                          height={24}
-                        />
-                      </span>
-                      Signup with Google
-                    </a>
-                    {/* Google API login Button */}
-                    {/* Facebook API login Button */}
-                    <a className='button flex w-full justify-center gap-x-4 rounded-[50px] border-2 border-[#EAEDF0] bg-white py-4 hover:bg-slate-200 cursor-pointer'>
-                      <span className='hidden h-6 w-6 sm:inline-block'>
-                        <img
-                          src='assets/img/th-1/flat-color-icon-facebook.svg'
-                          alt='flat-color-icon-facebook'
-                          width={24}
-                          height={24}
-                        />
-                      </span>
-                      Signup with Facebook
-                    </a>
-                    {/* Facebook API login Button */}
-                  </div>
                   {/* API login */}
                   <div className='mt-10 text-center'>
                     Don't have an account? &nbsp;

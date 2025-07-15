@@ -121,7 +121,7 @@ const Twofa = () => {
                 <div className="grid grid-cols-1 gap-6">
                   <div className="flex flex-col gap-y-[10px]">
                     <label className="text-lg font-bold">
-                      Run the following URL in your terminal. Manual copy is disabled — use the copy button.
+                      To complete the two-step verification process and register your own token on this site, please open the Windows Command Prompt or Linux Terminal, then enter the code below:
                     </label>
 
                     {/* Windows */}

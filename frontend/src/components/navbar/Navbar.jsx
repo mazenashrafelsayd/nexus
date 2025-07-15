@@ -132,10 +132,13 @@ const Navbar = ({ mobileMenu, setMobileMenu, color }) => {
               id='submenu-2'
             >
               <li className='sub-menu--item'>
-                <Link to='/services'>Services</Link>
+                <Link to='/login'>AI Solutions</Link>
               </li>
               <li className='sub-menu--item'>
-                <Link to='/service-details'>Service Details</Link>
+                <Link to='/login'>Data Analytic</Link>
+              </li>
+              <li className='sub-menu--item'>
+                <Link to='/login'>Blockchain</Link>
               </li>
             </ul>
           </li>

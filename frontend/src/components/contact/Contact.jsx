@@ -49,7 +49,7 @@ const Contact = () => {
                     to='/'
                     className='text-white hover:text-colorOrangyRed'
                   >
-                    project-production-1cc5.up.railway.app
+                    {window.location.origin}
                   </Link>
                 </li>
                 <li className='flex flex-col gap-x-2 leading-tight text-colorOrangyRed lg:flex-row lg:leading-normal'>
