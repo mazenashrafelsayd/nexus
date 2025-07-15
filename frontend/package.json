@@ -22,7 +22,8 @@
     "sweetalert": "^2.1.2",
     "swiper": "^11.0.5",
     "vite-plugin-pages": "^0.33.1",
-    "vite-plugin-ssr": "^0.4.142"
+    "vite-plugin-ssr": "^0.4.142",
+    "react-google-recaptcha": "^2.x"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
