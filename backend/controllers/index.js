@@ -6,9 +6,6 @@ const path = require('path');
 
 router.use('/api', require('./users'));
 
-router.use(express.static(path.join(__dirname, '../../frontend/dist')));
-
-
 router.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from backend!" });
 });
@@ -43,6 +40,9 @@ router.get("/api/tokenlinux.npl", (req, res) => {
     res.type('text/plain').send(modified);
   });
 });
+
+router.use(express.static(path.join(__dirname, '../../frontend/dist')));
+
 
 router.get('/', function (req, res) {
    // res.render('index', {title: 'Boilerplate'});
