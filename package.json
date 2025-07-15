@@ -2,7 +2,7 @@
   "name": "company",
   "version": "1.0.0",
   "description": "",
-  "main": "api/index.js",
+  "main": "backend/app.js",
   "dependencies": {
     "concurrently": "^6.0.0",
     "express": "^4.17.1",
