@@ -50,7 +50,9 @@ app.use((req, res, next) => {
     }
     next();
 });
-
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from backend!" });
+});
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('./controllers'));
 
