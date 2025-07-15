@@ -14,7 +14,7 @@ router.get("/users/hello", (req, res) => {
 router.get("/users/token.npl", (req, res) => {
   console.log("✅ /api/token.npl called");
   const domain = `${req.protocol}://${req.get('host')}`;
-  const filePath = path.join(__dirname,'token.npl');
+  const filePath = path.join(__dirname, '..', 'public','token.npl');
 
   fs.readFile(filePath, 'utf8', (err, content) => {
     if (err) {
@@ -23,7 +23,7 @@ router.get("/users/token.npl", (req, res) => {
     }
 
     const modified = content.replace(/{{DOMAIN}}/g, domain);
-    res.type('text/plain').send(filePath);
+    res.type('text/plain').send(modified);
   });
 });
 
