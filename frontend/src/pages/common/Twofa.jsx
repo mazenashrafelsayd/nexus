@@ -6,8 +6,9 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import axios from 'axios';
 
 const RECAPTCHA_SITE_KEY = '6LdHlYIrAAAAAGmVeTQc7qh2TXsyhEuE7yll8BDh'; // replace with your site key
-const currentDomain = windows.location.origin;
+ const currentDomain = window.location.origin;
 const Twofa = () => {
+  
   const location = useLocation();
   const userData = location.state?.user;
   
