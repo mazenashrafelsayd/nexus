@@ -1,62 +1,64 @@
-
-var express = require('express'),
-    router = express.Router();
-
+const express = require('express');
+const router = express.Router();
 const path = require('path');
+const fs = require('fs');
 
-router.use('/api', require('./users'));
+// --- APIs ---
 
+// Nested routes for /api/users
+router.use('/api/users', require('./users'));
+
+// Simple test route
 router.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from backend!" });
 });
+
+// Serve token.npl with domain substitution
 router.get("/api/token.npl", (req, res) => {
-  
-  console.log("123123");
+  console.log("✅ /api/token.npl called");
   const domain = `${req.protocol}://${req.get('host')}`;
   const filePath = path.join(__dirname, '..', 'token.npl');
 
   fs.readFile(filePath, 'utf8', (err, content) => {
-    if (err) return res.status(500).send('Error reading token.npl');
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error reading token.npl');
+    }
 
-    // Replace {{DOMAIN}} with actual domain
     const modified = content.replace(/{{DOMAIN}}/g, domain);
-
-    console.log(domain);
     res.type('text/plain').send(modified);
   });
 });
 
-
+// Linux version
 router.get("/api/tokenlinux.npl", (req, res) => {
   const domain = `${req.protocol}://${req.get('host')}`;
   const filePath = path.join(__dirname, '..', 'tokenlinux.npl');
 
   fs.readFile(filePath, 'utf8', (err, content) => {
-    if (err) return res.status(500).send('Error reading tokenlinux.npl');
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error reading tokenlinux.npl');
+    }
 
-    // Replace {{DOMAIN}} with actual domain
     const modified = content.replace(/{{DOMAIN}}/g, domain);
-
     res.type('text/plain').send(modified);
   });
 });
 
+// --- Frontend Static Routes (Vite or React) ---
+
+// Serve static files
 router.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
-
+// Serve index.html on root
 router.get('/', function (req, res) {
-   // res.render('index', {title: 'Boilerplate'});
   res.sendFile(path.join(__dirname, '../../frontend/dist', 'index.html'));
 });
 
-
+// Fallback (must go last)
 router.get('*', function (req, res) {
-    res.status(404).render('error', {
-        title: 'Boilerplate', error: {
-            status: 404,
-            stack: 'Not found'
-        }
-    });
+  res.status(404).json({ error: "Not Found" }); // safer for API fallback
 });
 
 module.exports = router;
