@@ -1,2 +1,5 @@
-const { execSync } = require('child_process');
-execSync('cd ..&&npm run dev', { stdio: 'inherit' });
+// api/index.js
+const serverless = require('serverless-http');
+const app = require('../app'); // assuming app.js is in root
+
+module.exports = serverless(app);
