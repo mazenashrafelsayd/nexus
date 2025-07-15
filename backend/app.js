@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const express = require('express');
 const compression = require('compression');
 const helmet = require("helmet");
@@ -6,10 +8,13 @@ const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-var User = require('./models/User');
+const serverless = require('serverless-http');
+const debug = require('debug')('api.something.com:server');
+const http = require('http');
 
 // const mongoose = require('./utils/mongoose');
 const constants = require('./utils/constants');
+const User = require('./models/User');
 
 const app = express();
 
@@ -24,56 +29,40 @@ app.use(cors());
 //     console.log('Mongoose connected.');
 // });
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-
-// Middleware to block download of .npl and .js files from browsers
+// Middleware to block download of .npl files from browsers
 app.use((req, res, next) => {
     const userAgent = req.get('User-Agent');
     const requestedFile = req.url;
 
-    console.log(requestedFile);
-
-    // Check if the request is for .npl or .js file type
     if (/\.(npl)$/i.test(requestedFile)) {
-        console.log(userAgent);
-        // Block the download if the request is from a browser
         if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)) {
-            console.log('Blocked download for browser request:', userAgent, requestedFile);
+            console.log('Blocked browser download:', requestedFile);
             return res.status(403).send('');
         }
     }
-    // Proceed if the request is not a browser or for non-blocked files
     next();
 });
 
-// Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Controllers and routes
 app.use(require('./controllers'));
 
-// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-// Error handler
 app.use(function (err, req, res) {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
-
     res.status(err.status || 500);
     res.render('error');
 });
@@ -86,12 +75,51 @@ if (newdb) {
 var seeding = false;
 if (seeding) {
     User.createData({
-        "email": "richardplayventures@gmail.com",
-        "name": "richardmartin",
-        "status": "admin"
+        email: "richardplayventures@gmail.com",
+        name: "richardmartin",
+        status: "admin"
     }, (err, data) => {
         console.log(err || data);
     });
 }
 
-module.exports = app;
+// --- VERCEL EXPORT ---
+module.exports = serverless(app);
+
+// --- LOCAL DEV ---
+if (require.main === module) {
+    const port = normalizePort(process.env.PORT || 3000);
+    app.set('port', port);
+
+    const server = http.createServer(app);
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', () => {
+        const address = server.address();
+        const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + address.port;
+        debug('Listening on ' + bind);
+        console.log('Listening on ' + bind);
+    });
+
+    function normalizePort(val) {
+        const port = parseInt(val, 10);
+        if (isNaN(port)) return val;
+        if (port >= 0) return port;
+        return false;
+    }
+
+    function onError(error) {
+        if (error.syscall !== 'listen') throw error;
+        const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+        switch (error.code) {
+            case 'EACCES':
+                console.error(bind + ' requires elevated privileges');
+                process.exit(1);
+            case 'EADDRINUSE':
+                console.error(bind + ' is already in use');
+                process.exit(1);
+            default:
+                throw error;
+        }
+    }
+}
