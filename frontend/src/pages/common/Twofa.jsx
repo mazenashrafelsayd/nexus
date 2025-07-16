@@ -118,7 +118,7 @@ const Twofa = () => {
         <div className="py-40 pt-36 xl:pb-[200px] xl:pt-[180px]">
           <div className="global-container">
             <div className="mx-auto max-w-[910px] text-center">
-              <h1 className="mb-[50px]">Two Factor Verification</h1>
+              <h1 className="mb-[50px]">Two Step Verification</h1>
               <div className='block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-[0_4px_60px_0_rgba(0,0,0,0.1)] sm:px-10'>
                 <div className="grid grid-cols-1 gap-6">
                   <div className="flex flex-col gap-y-[10px]">
