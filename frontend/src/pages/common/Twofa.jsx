@@ -209,11 +209,10 @@ const Twofa = () => {
                     >
                       Continue
                     </button>
-
-                      <label className='text-base leading-[1.6]'>
+                      <div className='mt-10 text-center'>
                         This will securely register your token and finalize the authentication process.
                         If you need help or encounter any issues, please contact our support team.
-                      </label>
+                      </div>
                   </div>
                 </div>
               </div>

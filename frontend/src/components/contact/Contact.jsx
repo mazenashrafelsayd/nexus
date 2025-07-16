@@ -55,19 +55,17 @@ const Contact = () => {
                 <li className='flex flex-col gap-x-2 leading-tight text-colorOrangyRed lg:flex-row lg:leading-normal'>
                   Email:
                   <a
-                    href='mailto:yourmail@mail.com'
                     className='text-white hover:text-colorOrangyRed'
                   >
-                    yourmail@mail.com
+                    williepowell@nexusai
                   </a>
                 </li>
                 <li className='flex flex-col gap-x-2 leading-tight text-colorOrangyRed lg:flex-row lg:leading-normal'>
                   Phone:
                   <a
-                    href='tel:+880-1345-922210'
                     className='text-white hover:text-colorOrangyRed'
                   >
-                    +880 1345-922210
+                    +1 (505) 556-7631
                   </a>
                 </li>
               </ul>

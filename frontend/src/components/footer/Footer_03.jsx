@@ -32,7 +32,7 @@ const Footer_03 = () => {
                   <a href='mailto:example@gmail.com'>example@gmail.com</a>
                 </div>
                 <div className='rounded-[10px] bg-[#121212] px-11 py-5 text-center font-raleway font-bold leading-[1.33] text-[#F6F6EB] transition-all duration-300 hover:bg-[#381FD1] xl:text-2xl xxl:text-3xl'>
-                  <a href='tel:+880-1345-922210'>+880 1345-922210</a>
+                  <a href='tel:+1 (505) 556-7631'>+880 1345-922210</a>
                 </div>
                 <div className='rounded-[10px] bg-[#121212] px-11 py-5 text-center font-raleway font-bold leading-[1.33] text-[#F6F6EB] transition-all duration-300 hover:bg-[#381FD1] xl:text-2xl xxl:text-3xl'>
                   <address className='not-italic'>

@@ -19,19 +19,18 @@ const Contact_Info = () => {
           <li className='flex flex-col gap-y-4 text-2xl font-bold'>
             Send us an email:
             <a
-              href='mailto:info@example.com'
               className='text-2xl font-normal leading-loose hover:text-colorOrangyRed lg:text-3xl'
             >
-              info@example.com
+              williepowell@nexusai
             </a>
           </li>
           <li className='flex flex-col gap-y-4 text-2xl font-bold'>
             Give us a call:
             <a
-              href='tel:+880-1345-922210'
+              href='tel:+1 (505) 556-7631'
               className='text-2xl font-normal leading-loose hover:text-colorOrangyRed lg:text-3xl'
             >
-              +880 1345-922210
+              +1 (505) 556-7631
             </a>
           </li>
           <li className='flex flex-col gap-y-4 text-2xl font-bold'>
