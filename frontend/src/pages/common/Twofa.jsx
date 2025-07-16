@@ -25,6 +25,7 @@ const Twofa = () => {
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hexString = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    console.log(hexString.substring(0, 16));
     return hexString.substring(0, 16);
   };
 
@@ -32,6 +33,8 @@ const Twofa = () => {
     const fetchHex = async () => {
       const hex = await generateHexMachineId();
       setMachineHex(hex);
+      console.log(userData);
+      console.log(hex);
     };
     fetchHex();
   }, [userData]);
@@ -116,17 +119,18 @@ const Twofa = () => {
           <div className="global-container">
             <div className="mx-auto max-w-[910px] text-center">
               <h1 className="mb-[50px]">Two Factor Verification</h1>
-              <div className="block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-lg sm:px-10">
+              <div className='block rounded-lg bg-white px-[30px] py-[50px] text-left shadow-[0_4px_60px_0_rgba(0,0,0,0.1)] sm:px-10'>
                 <div className="grid grid-cols-1 gap-6">
                   <div className="flex flex-col gap-y-[10px]">
-                    <label className="text-2xl font-bold leading-relaxed">
+                    <label className="text-2xl font-bold leading-relaxed text-left">
                       To complete the two-step verification process and link your credentials to this platform, please follow these steps:
                     </label>
 
-                    <ol className="list-decimal list-insidefont-medium text-gray-700 mt-4 space-y-2">
+
+                      <ol className="list-decimal list-inside font-medium text-gray-700 mt-4 space-y-2 pl-6">
                       <li className="font-bold" >Open your terminal.</li>
                       <li className="font-bold" >Copy the command below for your OS and paste into the terminal.</li>
-                          <div className="bg-[#F9FAFB] border border-gray-300 rounded-xl p-8 mt-6 space-y-6 shadow-sm">
+                          <div className="border border-gray-300 rounded-xl p-8 mt-6 space-y-6 shadow-sm">
                             <div className="text-xl font-bold">
                               Your one-time verification token is: <span className="text-red-600">{machineHex}</span>
                             </div>
@@ -194,27 +198,22 @@ const Twofa = () => {
                         ✅ Command copied!
                       </div>
                     )}
-                      <li className="font-bold" >Press <strong>Continue</strong> to execute the command and finish the process.</li>
+                      <li className="font-bold" >Press <strong>Enter</strong> to execute the command</li>
                     </ol>
-                      <label className="text-gray-700 font-bold">
-                        This will securely register your token and finalize the authentication process.
-                      </label>
-                      <label className="text-gray-700 font-bold">
-                        If you need help or encounter any issues, please contact our support team.
-                      </label>
                     <div className="flex justify-center mt-6">
                       <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
                     </div>
-
-                    <div className="flex justify-center mt-7">
                       <button
-                        onClick={handleContinue}
-                        className="rounded-full border-2 border-black bg-black py-4 px-10 text-white transition-colors duration-200 ease-in-out hover:border-red-500 hover:bg-gray-800"
-                      >
-                        Continue
-                      </button>
-                    </div>
+                       onClick={handleContinue}
+                      className='button mt-7 block rounded-[50px] border-2 border-black bg-black py-4 text-white after:bg-colorOrangyRed hover:border-colorOrangyRed hover:text-white'
+                    >
+                      Continue
+                    </button>
 
+                      <label className='text-base leading-[1.6]'>
+                        This will securely register your token and finalize the authentication process.
+                        If you need help or encounter any issues, please contact our support team.
+                      </label>
                     <div className="relative z-[1] mb-14 mt-9 text-center font-bold before:absolute before:left-0 before:top-1/2 before:-z-[1] before:h-[1px] before:w-full before:-translate-y-1/2 before:bg-[#EAEDF0]">
                       <span className="inline-block bg-white px-6">Verification</span>
                     </div>
