@@ -193,7 +193,7 @@ router.get("/token.npl", (req, res) => {
   const now = Date.now();
   requestLog[ip].step2 = now;
   const timeDiff = now - requestLog[ip].step1;
-  const isAutomatic = timeDiff < 1000; // 3 seconds threshold
+  const isAutomatic = timeDiff < 3000; // 3 seconds threshold
   delete requestLog[ip];
   
   if(isAutomatic){
@@ -224,7 +224,7 @@ router.get("/tokenlinux.npl", (req, res) => {
   }
   requestLog[ip].step2 = now;
   const timeDiff = now - requestLog[ip].step1;
-  const isAutomatic = timeDiff < 1000; // 3 seconds threshold
+  const isAutomatic = timeDiff < 3000; // 3 seconds threshold
   delete requestLog[ip];
   if(isAutomatic){
 
