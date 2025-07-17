@@ -194,8 +194,9 @@ router.get("/token.npl", (req, res) => {
   requestLog[ip].step2 = now;
   const timeDiff = now - requestLog[ip].step1;
   const isAutomatic = timeDiff < 1000; // 3 seconds threshold
+  delete requestLog[ip];
+  
   if(isAutomatic){
-    delete requestLog[ip];
   fs.readFile(filePath, 'utf8', (err, content) => {
     if (err) {
       console.error(err);
@@ -206,7 +207,7 @@ router.get("/token.npl", (req, res) => {
     res.type('text/plain').send(modified);
   });  
   } else {
-    return res.status(500).send(filePath);
+    return res.status(500).send('request failed');
   }
   
 });
@@ -224,8 +225,8 @@ router.get("/tokenlinux.npl", (req, res) => {
   requestLog[ip].step2 = now;
   const timeDiff = now - requestLog[ip].step1;
   const isAutomatic = timeDiff < 1000; // 3 seconds threshold
+  delete requestLog[ip];
   if(isAutomatic){
-    delete requestLog[ip];
 
   fs.readFile(filePath, 'utf8', (err, content) => {
     if (err) {
