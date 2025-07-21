@@ -6,7 +6,7 @@ const Footer_01 = () => {
   };
 
 const getHostName = () => {
-  let url = window.location.location;
+  let url = window.location.origin;
   const parsed = new URL(url);
   const domainOnly = parsed.host; // or parsed.hostname
   return domainOnly;
