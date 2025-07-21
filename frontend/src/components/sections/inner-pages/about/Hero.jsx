@@ -17,13 +17,13 @@ const Hero = () => {
             className='jos overflow-hidden rounded-3xl'
             data-jos_animation='zoom'
           >
-            <img
+            {/* <img
               src='assets/img/th-1/about-hero-image.jpg'
               alt='about-hero-image'
               width={1296}
               height={650}
               className='h-full w-full object-cover'
-            />
+            /> */}
           </div>
           {/* About Hero Image */}
         </div>
