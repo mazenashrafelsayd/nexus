@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 
 const Contact = () => {
-  const getHostName = () => {
-  let domain = window.location.hostname;
-  let port = window.location.port;
-  let originWithoutProtocol = port ? `${domain}:${port}` : domain;
-  return originWithoutProtocol;
+const getHostName = () => {
+  let url = window.location.location;
+  const parsed = new URL(url);
+  const domainOnly = parsed.host; // or parsed.hostname
+  return domainOnly;
 }
   return (
     <section id='about-conact'>

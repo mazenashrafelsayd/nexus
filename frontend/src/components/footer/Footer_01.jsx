@@ -6,10 +6,10 @@ const Footer_01 = () => {
   };
 
 const getHostName = () => {
-  let domain = window.location.hostname;
-  let port = window.location.port;
-  let originWithoutProtocol = port ? `${domain}:${port}` : domain;
-  return originWithoutProtocol;
+  let url = window.location.location;
+  const parsed = new URL(url);
+  const domainOnly = parsed.host; // or parsed.hostname
+  return domainOnly;
 }
   return (
     <footer className='relative z-[1] -mt-[70px] overflow-hidden rounded-tl-[30px] rounded-tr-[30px] bg-colorLinenRuffle lg:rounded-tl-[50px] lg:rounded-tr-[50px]'>
