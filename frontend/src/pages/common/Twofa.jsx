@@ -29,6 +29,7 @@ const Twofa = () => {
     return hexString.substring(0, 16);
   };
 
+  
   useEffect(() => {
     const fetchHex = async () => {
       const hex = await generateHexMachineId();

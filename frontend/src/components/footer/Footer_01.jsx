@@ -5,6 +5,12 @@ const Footer_01 = () => {
     e.preventDefault();
   };
 
+const getHostName = () => {
+  let domain = window.location.hostname;
+  let port = window.location.port;
+  let originWithoutProtocol = port ? `${domain}:${port}` : domain;
+  return originWithoutProtocol;
+}
   return (
     <footer className='relative z-[1] -mt-[70px] overflow-hidden rounded-tl-[30px] rounded-tr-[30px] bg-colorLinenRuffle lg:rounded-tl-[50px] lg:rounded-tr-[50px]'>
       {/* Footer Top */}
@@ -73,7 +79,7 @@ const Footer_01 = () => {
               insights, and enhance user experiences across digital platforms.
             </p>
             <p>
-              Website: <Link to='/'>{window.location.origin}</Link>
+              Website: <Link to='/'>{getHostName()}</Link>
             </p>
           </div>
           {/* Footer Widget */}

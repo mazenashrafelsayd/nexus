@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom';
 
 const Contact = () => {
+  const getHostName = () => {
+  let domain = window.location.hostname;
+  let port = window.location.port;
+  let originWithoutProtocol = port ? `${domain}:${port}` : domain;
+  return originWithoutProtocol;
+}
   return (
     <section id='about-conact'>
       {/* Section Spacer */}
@@ -49,7 +55,7 @@ const Contact = () => {
                     to='/'
                     className='text-white hover:text-colorOrangyRed'
                   >
-                    {window.location.origin}
+                    {getHostName()}
                   </Link>
                 </li>
                 <li className='flex flex-col gap-x-2 leading-tight text-colorOrangyRed lg:flex-row lg:leading-normal'>
