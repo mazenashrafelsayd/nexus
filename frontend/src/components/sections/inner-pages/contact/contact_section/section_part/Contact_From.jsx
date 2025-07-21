@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
+
 
 const Contact_From = () => {
   const [input, setInput] = useState({
@@ -10,10 +12,10 @@ const Contact_From = () => {
     message: '',
   });
 
+ const navigate = useNavigate();
   const handleInput = (e) => {
     setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -26,6 +28,7 @@ const Contact_From = () => {
       swal('Opes', 'Please fill required fields', 'error');
       return;
     }
+    navigate("/login");
   };
 
   return (
