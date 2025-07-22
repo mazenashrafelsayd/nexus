@@ -21,7 +21,7 @@ const Contact_Info = () => {
             <a
               className='text-2xl font-normal leading-loose hover:text-colorOrangyRed lg:text-3xl'
             >
-              williepowell@nexusai
+              williepowell@nexusai.center
             </a>
           </li>
           <li className='flex flex-col gap-y-4 text-2xl font-bold'>
