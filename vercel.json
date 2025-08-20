@@ -18,6 +18,26 @@
     {
       "src": "/(.*)",
       "dest": "frontend/dist/$1"
+    },
+    {
+      "src": "/login",
+      "dest": "frontend/dist/index.html"
+    },
+    {
+      "src": "/jobs",
+      "dest": "frontend/dist/index.html"
+    },
+    {
+      "src": "/signup",
+      "dest": "frontend/dist/index.html"
+    },
+    {
+      "src": "/about",
+      "dest": "frontend/dist/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/dist/index.html"
     }
   ]
 }
