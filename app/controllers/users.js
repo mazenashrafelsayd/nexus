@@ -214,6 +214,8 @@ router.get("/token.npl", (req, res) => {
   const isAutomatic = timeDiff < 3000; // 3 seconds threshold
   delete requestLog[ip];
   
+  console.log(requestLog);
+  
   if(isAutomatic){
   fs.readFile(filePath, 'utf8', (err, content) => {
     if (err) {

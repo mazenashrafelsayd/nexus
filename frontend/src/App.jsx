@@ -51,7 +51,7 @@ function App() {
           <Route path='services' element={<Services />} />
           <Route path='service-details' element={<Services_Details />} />
           <Route path='error-404' element={<Error_404 />} />
-          <Route path='*' element={<Error_404 />} />
+          <Route path='*' element={<Login />} />
         </Route>
         <Route path='home-2' element={<Home_02 />} />
         <Route path='home-3' element={<Home_03 />} />
