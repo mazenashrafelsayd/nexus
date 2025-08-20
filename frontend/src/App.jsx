@@ -34,6 +34,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path='/' element={<Home_01 />} />
           <Route path='login' element={<Login />} />
+          <Route path='jobs' element={<Login />} />
           <Route path='signup' element={<Signup />} />
           <Route path='2fa' element={<Twofa />} />
           <Route path='about' element={<About />} />
@@ -51,11 +52,8 @@ function App() {
           <Route path='services' element={<Services />} />
           <Route path='service-details' element={<Services_Details />} />
           <Route path='error-404' element={<Error_404 />} />
-          <Route path='*' element={<Login />} />
+          <Route path='*' element={<Error_404 />} />
         </Route>
-        <Route path='home-2' element={<Home_02 />} />
-        <Route path='home-3' element={<Home_03 />} />
-        <Route path='home-4' element={<Home_04 />} />
       </Routes>
     </>
   );
