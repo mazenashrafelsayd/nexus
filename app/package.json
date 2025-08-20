@@ -28,7 +28,7 @@
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
     "pug": "^3.0.0",
-    "winston": "^3.3.3",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "winston": "^3.3.3"
   }
 }
