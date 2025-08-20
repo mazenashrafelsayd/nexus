@@ -17,23 +17,23 @@
     },
     {
       "src": "/login",
-      "dest": "frontend/dist/$1"
+      "dest": "frontend/dist/index.html"
     },
     {
       "src": "/jobs",
-      "dest": "frontend/dist/$1"
+      "dest": "frontend/dist/index.html"
     },
     {
       "src": "/signup",
-      "dest": "frontend/dist/$1"
+      "dest": "frontend/dist/index.html"
     },
     {
       "src": "/about",
-      "dest": "frontend/dist/$1"
+      "dest": "frontend/dist/index.html"
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/dist/$1"
+      "dest": "frontend/dist/index.html"
     }
   ]
 }
