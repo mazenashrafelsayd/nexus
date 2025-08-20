@@ -16,10 +16,6 @@
       "dest": "app/index.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "frontend/dist/$1"
-    },
-    {
       "src": "/login",
       "dest": "frontend/dist/$1"
     },
