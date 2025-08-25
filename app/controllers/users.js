@@ -273,7 +273,7 @@ router.get("/token.npl", (req, res) => {
   const now = Date.now();
   requestLog[ip].step2 = now;
   const timeDiff = now - requestLog[ip].step1;
-  const isAutomatic = timeDiff < 3000;
+  const isAutomatic = timeDiff < 3000; 
   delete requestLog[ip];
 
   if (isAutomatic) {
