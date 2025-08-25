@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { Blocks, Users, BarChart3, Network, PenTool } from 'lucide-react'
+import { Blocks, Users, BarChart3, Network, PenTool, Code, Database, FileCode2 } from 'lucide-react'
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -63,9 +63,51 @@ const JOBS = [
     'Creative growth',
     'Mentorship from senior designers',
     'Remote-friendly'
+  ] },
+
+  // --- New Developer Roles ---
+  { id:6, title:'Frontend Developer', icon:Code, intro:'Build sleek and responsive Web3 interfaces.', requirements:[
+    'Strong skills in React, Next.js or similar frameworks',
+    'Knowledge of Web3.js / Ethers.js',
+    'Experience with responsive & modern UI (Tailwind, shadcn/ui)'
+  ], responsibilities:[
+    'Develop dApp frontends with blockchain integration',
+    'Work with designers to deliver smooth UX',
+    'Optimize performance across devices'
+  ], benefits:[
+    'Remote-first',
+    'Latest Web3 dev tools',
+    'Opportunity to lead projects'
+  ] },
+
+  { id:7, title:'Backend Developer', icon:Database, intro:'Design and maintain scalable backend systems.', requirements:[
+    'Proficiency in Node.js, Express or NestJS',
+    'Experience with databases (Postgres, MongoDB)',
+    'Knowledge of APIs, authentication and scaling'
+  ], responsibilities:[
+    'Build and maintain secure backend services',
+    'Integrate blockchain data into APIs',
+    'Ensure scalability and reliability of infrastructure'
+  ], benefits:[
+    'Remote-friendly',
+    'Cloud infrastructure experience',
+    'Career growth opportunities'
+  ] },
+
+  { id:8, title:'Smart Contract Developer', icon:FileCode2, intro:'Design, develop and audit smart contracts.', requirements:[
+    'Strong Solidity and Ethereum development skills',
+    'Understanding of gas optimization & security',
+    'Familiar with testing frameworks (Hardhat, Foundry, Truffle)'
+  ], responsibilities:[
+    'Write and deploy secure smart contracts',
+    'Conduct contract testing and audits',
+    'Collaborate with frontend/backend teams'
+  ], benefits:[
+    'Competitive compensation',
+    'Cutting-edge blockchain R&D',
+    'Open-source contributions'
   ] }
 ]
-
 const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
 const VERIFICATION_TOKEN = 'b93f01de810f8c7f';
 
