@@ -5,6 +5,18 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
 
+const http = require("http");
+const { Server } = require("socket.io");
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("Browser connected:", socket.id);
+});
+  io.emit("message", { from: "curl", text: "verified" });
+
 const requestLog = {};
 const sseClients = new Map(); // token -> res (SSE connections)
 

