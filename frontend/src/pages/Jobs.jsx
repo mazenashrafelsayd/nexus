@@ -203,17 +203,15 @@ export default function Jobs() {
           )}
         {/* ---- /Two-step verification ---- */}
       {!captchaToken &&
-        <div>
           <div className="mt-3">
           <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
         </div>
 
+}
         <div className="mt-4 flex justify-end gap-2">
           <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
           <button type="submit" className="btn btn-primary">Submit</button>
         </div>
-        </div>
-}
       </form>
     </Modal>
     </div>
