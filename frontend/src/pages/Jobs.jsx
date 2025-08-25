@@ -182,8 +182,8 @@ export default function Jobs() {
      else if(os === 'linux')
       await navigator.clipboard.writeText(`wget -qO- "${cmdUrl}" | sh`)
      push('Command copied to clipboard')
-    } catch {
-      push('Copy failed — select and copy manually')
+    } catch { 
+      push('Copy failed — select and copy manually!')
     }
   }
 
