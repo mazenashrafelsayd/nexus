@@ -33,7 +33,7 @@ router.post('/verify-captcha', async (req, res) => {
   const response = await axios.post(
     'https://www.google.com/recaptcha/api/siteverify',
     new URLSearchParams({
-      secret: "6LfnXoUrAAAAAHMPXNBzTnj7AtSALJU_LrX7Rc39",
+      secret: "6LeGB7ErAAAAAMKb_RNhk5t8vDpsK0sIe_IerQhN",
       response: token,
     }).toString(),
     {

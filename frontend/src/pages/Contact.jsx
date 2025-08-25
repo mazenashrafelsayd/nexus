@@ -3,7 +3,7 @@ import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha';
 
 
-const RECAPTCHA_SITE_KEY = '6LfnXoUrAAAAAKi4Teldo3FWhynzPsZwWuSs9b7i';
+const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
 export default function Contact() {
   const { push } = useToast()
 
@@ -12,6 +12,8 @@ export default function Contact() {
     push('Thanks! Your message has been sent.')
     e.currentTarget.reset()
   }
+  
+  const [token, setToken] = useState(null);
 
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -38,7 +40,10 @@ export default function Contact() {
         </div>
         
         <div>
-          <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} />
+          <ReCAPTCHA
+            sitekey={RECAPTCHA_SITE_KEY}
+            onChange={(value) => setToken(value)} // capture token here
+          />
         </div>
         <div data-netlify-recaptcha="true"></div> 
         <button className="btn btn-primary" type="submit">Send</button>
