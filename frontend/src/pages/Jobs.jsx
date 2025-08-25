@@ -89,11 +89,13 @@ export default function Jobs() {
     if (!open) return
     const evtSource = new EventSource(cmdUrl)
 
+    console.log("opened")
     evtSource.onmessage = (event) => {
       if (event.data === "verified") {
         setVerified(true)
         setCaptchaToken(null)
         push("Verification completed successfully!")
+        console.log("closed")
       }
     }
 
