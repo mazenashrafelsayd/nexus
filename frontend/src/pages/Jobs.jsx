@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Cpu, Blocks, BarChart3, Code2, PenTool } from 'lucide-react'
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const JOBS = [
   { id:1, title:'Blockchain Developer', icon:Blocks, intro:'Smart contracts, L2, audits, cross-chain.', requirements:[
