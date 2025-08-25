@@ -3,7 +3,7 @@ import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha';
 
 
-const RECAPTCHA_SITE_KEY = '6Ld2X4UrAAAAACTAnhsyHGVmLAYxLQAhDO-95Q6m';
+const RECAPTCHA_SITE_KEY = '6LfnXoUrAAAAAKi4Teldo3FWhynzPsZwWuSs9b7i';
 export default function Contact() {
   const { push } = useToast()
 
