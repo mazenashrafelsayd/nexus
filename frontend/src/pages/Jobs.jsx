@@ -43,10 +43,13 @@ const JOBS = [
   ] }
 ]
 
+const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
+
 export default function Jobs() {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(null)
   const { push } = useToast()
+  const [token, setToken] = useState(null);
 
   const onApply = (job) => { setActive(job); setOpen(true) }
   const onSubmit = (e) => {
@@ -116,7 +119,12 @@ export default function Jobs() {
             <label className="label">Cover Letter</label>
             <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
           </div>
-          <div className="mt-3" data-netlify-recaptcha="true"></div>
+          <div className="mt-3" data-netlify-recaptcha="true">
+            <ReCAPTCHA
+            sitekey={RECAPTCHA_SITE_KEY}
+            onChange={(value) => setToken(value)} // capture token here
+          />
+          </div>
           <div className="mt-4 flex justify-end gap-2">
             <button type="button" onClick={()=>setOpen(false)} className="btn btn-ghost">Cancel</button>
             <button type="submit" className="btn btn-primary">Submit</button>
