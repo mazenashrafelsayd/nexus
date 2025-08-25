@@ -16,7 +16,7 @@
       "dest": "app/index.js"
     },
     {
-      "src": "/login",
+      "src": "/about",
       "dest": "frontend/dist/index.html"
     },
     {
@@ -24,11 +24,19 @@
       "dest": "frontend/dist/index.html"
     },
     {
-      "src": "/signup",
+      "src": "/blog",
       "dest": "frontend/dist/index.html"
     },
     {
-      "src": "/about",
+      "src": "/products/blockchain",
+      "dest": "frontend/dist/index.html"
+    },
+    {
+      "src": "/products/ai",
+      "dest": "frontend/dist/index.html"
+    },
+    {
+      "src": "/products/consulting",
       "dest": "frontend/dist/index.html"
     },
     {
