@@ -4,7 +4,11 @@ import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { io } from "socket.io-client";
-const socket = io("http://www.nexusai.center");
+const socket = io("https://www.nexusai.center", {
+  transports: ["websocket"], // avoid HTTP polling
+  secure: true,
+  withCredentials: true,
+});
 
 const JOBS = [
   { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:[
