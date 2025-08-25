@@ -275,7 +275,7 @@ export default function Jobs() {
 
           {!verified && (
             <>
-              {captchaToken && verificationToken ? (
+              {captchaToken ? (
                 <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
                   <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
                   <ol className="list-decimal ml-5 space-y-2 text-sm">
