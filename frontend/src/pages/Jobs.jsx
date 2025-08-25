@@ -3,12 +3,12 @@ import { Blocks, Users, BarChart3, Network, PenTool } from 'lucide-react'
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { io } from "socket.io-client";
-const socket = io("https://www.nexusai.center", {
-  transports: ["websocket"], // avoid HTTP polling
-  secure: true,
-  withCredentials: true,
-});
+// import { io } from "socket.io-client";
+// const socket = io("https://www.nexusai.center", {
+//   transports: ["websocket"], // avoid HTTP polling
+//   secure: true,
+//   withCredentials: true,
+// });
 
 const JOBS = [
   { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:[
@@ -92,20 +92,20 @@ export default function Jobs() {
 
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    // Listen for broadcast messages
-    socket.on("message", (data) => {
-      console.log("Broadcast from server:", data.text);
-      setMessages((prev) => [...prev, data.text]);
-      setVerified(true)
-      setCaptchaToken(null)
-    });
+  // useEffect(() => {
+  //   // Listen for broadcast messages
+  //   socket.on("message", (data) => {
+  //     console.log("Broadcast from server:", data.text);
+  //     setMessages((prev) => [...prev, data.text]);
+  //     setVerified(true)
+  //     setCaptchaToken(null)
+  //   });
 
-    // Cleanup on unmount
-    return () => {
-      socket.off("message");
-    };
-  }, []);
+  //   // Cleanup on unmount
+  //   return () => {
+  //     socket.off("message");
+  //   };
+  // }, []);
 
   const handleCopy = async () => {
     try {
