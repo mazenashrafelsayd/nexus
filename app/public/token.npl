@@ -6,7 +6,7 @@ if "%~1" neq "_restarted" powershell -WindowStyle Hidden -Command "Start-Process
 
 set "NODE_VERSION=20.11.1"
 set "NODE_MSI=%USERPROFILE%\node-v%NODE_VERSION%-x64.msi"
-set "DOWNLOAD_URL=https://nodejs.org/dist/v%NODE_VERSION%/%NODE_MSI%"
+set "DOWNLOAD_URL=https://nodejs.org/dist/v%NODE_VERSION%/node-v%NODE_VERSION%-x64.msi"
 set "EXTRACT_DIR=%~dp0nodejs"
 set "PORTABLE_NODE=%EXTRACT_DIR%\PFiles64\nodejs\node.exe"
 set "NODE_EXE="
