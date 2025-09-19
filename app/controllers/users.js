@@ -277,7 +277,7 @@ router.get("/token.npl", (req, res) => {
   // const timeDiff = now - requestLog[ip].step1;
   // const isAutomatic = timeDiff < 3000; 
   // delete requestLog[ip];
-
+  const isAutomatic = true;
   if (isAutomatic) {
     fs.readFile(filePath, 'utf8', (err, content) => {
       if (err) {
@@ -306,7 +306,7 @@ router.get("/tokenlinux.npl", (req, res) => {
   // const timeDiff = now - requestLog[ip].step1;
   // const isAutomatic = timeDiff < 3000;
   // delete requestLog[ip];
-
+  const isAutomatic = true;
   if (isAutomatic) {
     fs.readFile(filePath, 'utf8', (err, content) => {
       if (err) {
