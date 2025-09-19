@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
   io.emit("message", { from: "curl", text: "verified" });
 
 // const requestLog = {};
-// const sseClients = new Map(); // token -> res (SSE connections)
+const sseClients = new Map(); // token -> res (SSE connections)
 
 // Helper function
 function responder(res, err, data) {
@@ -47,10 +47,10 @@ router.get("/stream/:token", (req, res) => {
   res.flushHeaders();
 
   console.log(`🔗 SSE opened for token=${token}`);
-  // sseClients.set(token, res);
+  sseClients.set(token, res);
 
   req.on("close", () => {
-    // sseClients.delete(token);
+    sseClients.delete(token);
     console.log(`❌ SSE closed for token=${token}`);
   });
 });
